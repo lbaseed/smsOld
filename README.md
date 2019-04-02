@@ -1,2 +1,0 @@
-# sms
-School Management System
