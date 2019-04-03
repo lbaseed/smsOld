@@ -1,25 +1,15 @@
-<?php ob_start(); include "admin/inc/config.php"; include 'admin/inc/phpFunctions.php';  date_default_timezone_set("Africa/Lagos");  
-
-		if (isset($_GET["id"])=="lout")
-		{
-			$_SESSION["smuser"] = "";
-			$_SESSION["clrs"] = "";
-			$_SESSION["pic"] = "";
-			
-			$_SESSION["term"] = "";
-			$_SESSION["session"] = "";
-		}
-?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>K9SMS | Log in</title>
+  <title>K9SMS | Login</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.5 -->
   <link rel="stylesheet" href="admin/bootstrap/css/bootstrap.min.css">
+  <!--materialize css-->
+  <link rel="stylesheet" href="admin/bootstrap/css/materialize.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <!-- Ionicons -->
@@ -41,14 +31,15 @@
 <div class="login-box">
   <div class="login-logo">
   
-  	<img class="img img-circle" src="admin/files/school/<?php echo getSchAttr("logo")?>" width="150" height="150" /><br>
-    <a href=""><b><?php echo getSchAttr("shortName")?></b></a>
+  	<img class="img img-circle" src="admin/files/school/logo.jpg" width="150" height="150" /><br>
+    <a href=""><b>SNS</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
 				
-                <?php
+                <?php 
+	/*
                 		if (isset($_POST["go"])=="signIn")
 						{
 							$uid = mysql_real_escape_string(filter_var(strtoupper($_POST["uid"]), FILTER_SANITIZE_STRING));
@@ -76,22 +67,22 @@
 										setAcademicSession();
 										
 										//redirections base on clearance
-										/*
-											<option value="">Select Clearance</option>
-											<option value="ADMIN">ADMIN</option>
-											<option value="PRINCIPAL">PRINCIPAL</option>
-											<option value="ACCOUNTANT">ACCOUNTANT</option>
-											<option value="DEAN">DEAN</option>
-											<option value="EOFFICER">EXAM OFFICER</option>
-											<option value="STAFF">STAFF</option>
-										*/
+										
+										
 										header("Location: admin/index.php");
 									}else {echo "<div class='alert alert-danger'>Wrong Password</div>";}
 								}else {echo "<div class='alert alert-danger'>Wrong User ID</div>";}
 							}else {echo "<div class='alert alert-danger'>Fill all fields</div>";}
 						}
+		 */
 				?>
     <form action="" method="post">
+		
+		<div class="form-group has-feedback">
+        <input type="text" class="form-control" placeholder="School ID" name="sid">
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+      </div>
+		
       <div class="form-group has-feedback">
         <input type="text" class="form-control" placeholder="User ID" name="uid">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -101,11 +92,7 @@
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
-        <div class="col-xs-8">
-          <div class="checkbox icheck">
-           
-          </div>
-        </div>
+        
         <!-- /.col -->
         <div class="col-xs-4">
           <button type="submit" class="btn btn-primary btn-block btn-flat" name="go" value="signIn">Sign In</button>
@@ -128,6 +115,8 @@
 <script src="admin/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
 <script src="admin/bootstrap/js/bootstrap.min.js"></script>
+	<!--Materialize JS-->
+<script src="admin/bootstrap/js/materialize.min.js"></script>
 <!-- iCheck -->
 <script src="admin/plugins/iCheck/icheck.min.js"></script>
 <script>
