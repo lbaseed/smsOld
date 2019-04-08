@@ -337,10 +337,10 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="<?php //echo "files/staff/".$_SESSION["pic"];?>" width="160" height="160" class="img-circle" alt="">
+          <img src="../files/staff/SP_1001.jpg" width="200" height="210" class="img-circle" alt="">
         </div>
         <div class="pull-left info">
-          <p><?php //echo "Welcome <b>".getStaffLastName($_SESSION["smuser"])."</b>";?></p>
+          <p><?php //echo "Welcome <b>".getStaffLastName($_SESSION["smuser"])."</b>";?>Welcome Admin</p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>

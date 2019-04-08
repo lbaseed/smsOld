@@ -79,7 +79,7 @@ value=""/>
                          <br>
                         <div class="input-group col-lg-10">
                         	<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" class="form-control" placeholder="Date of Birth" name="dob" value=""/>
+                            <input type="text" class="form-control" placeholder="Date of Birth" name="dob" id="datepicker" value=""/>
                         </div>
                         <br>
                         <div class="input-group col-lg-10">
