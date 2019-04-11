@@ -159,14 +159,20 @@
 	
 	function getSchoolFees($term, $session)
 	{
-		
-		$fetch = mysql_query("select * from fees where term='$term' and session='$session'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$fees = mysql_result($fetch, 0, "fees");
-			
-			return $fees;
+		$stmt  = $pdo->prepare("select * from fees where term =:term and session =:session");
+		$stmt->execute(['term'=> $term, 'session' => $session ]);
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+			 $fees = $row['fees'];
+			 return $fees;
 		}
+		
+		// $fetch = mysql_query("select * from fees where term='$term' and session='$session'");
+		// if (@mysql_num_rows($fetch)>0)
+		// {
+		// 	$fees = mysql_result($fetch, 0, "fees");
+			
+		// 	return $fees;
+		// }
 	}
 	
 	function getSchoolFeesPaid($sid, $term, $session)
