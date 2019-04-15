@@ -12,18 +12,20 @@
                 <div class="box-body">
                 		
                         <div class="input-group">
-                            <a href="<?php echo "index.php?id=33&subID=1"?>"><button class="btn btn-info">Register Core Subjects</button></a> &nbsp &nbsp &nbsp
-                            <a href="<?php echo "index.php?id=33&subID=2"?>"><button class="btn btn-info">Register Optional Subjects</button></a>
+                            <a href="<?php echo "?subID=1"; ?>"><button class="btn">Register Core Subjects</button></a> &nbsp &nbsp &nbsp
+                            <a href="<?php echo "?subID=2"; ?>"><button class="btn">Register Optional Subjects</button></a>
                         </div>
                       <br><hr>
-                      <?php 
-					  	if (isset($_GET["subID"]))
-						{	echo "<label>Core Subjects Registration</label>";
-					  ?>  
                       
-                	<?php
-
-							if(isset($_POST["go"]) == "Register Subjects"){
+					<?php
+						if (isset($_GET["subID"]))
+						{
+					if ($_GET["subID"]=="1")
+						
+							
+						{	echo "<label>Core Subjects Registration</label>";
+						 
+						 	if(isset($_POST["go"]) == "Register Subjects"){
 
 								$term = $_SESSION["term"];
 								$session = $_SESSION["session"];
@@ -68,13 +70,13 @@
 														'recID'=>$recID3,
 														'ref'=>$recID,
 														'studentID'=>$studentID,
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => 'FIRST',
+														'ca1' => '',
+														'ca2' => '',
+														'ca3' => '',
+														'ca4' => '',
+														'exam' => '',
+														'total' => '',
+														'term' => 'FIRST',
 														'session'=> $session
 														]);
 													$recID3+= rand(0,99592);
@@ -82,13 +84,13 @@
 														'recID'=>$recID3,
 														'ref'=>$recID,
 														'studentID'=>$studentID,
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => 'FIRST',
+														'ca1' => '',
+														'ca2' => '',
+														'ca3' => '',
+														'ca4' => '',
+														'exam' => '',
+														'total' => '',
+														'' => 'SECOND',
 														'session'=> $session
 														]);
 													$recID3+= rand(0,99592);
@@ -96,13 +98,13 @@
 														'recID'=>$recID3,
 														'ref'=>$recID,
 														'studentID'=>$studentID,
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => '',
-														'' => 'FIRST',
+														'ca1' => '',
+														'ca2' => '',
+														'ca3' => '',
+														'ca4' => '',
+														'exam' => '',
+														'total' => '',
+														'' => 'THIRD',
 														'session'=> $session
 														]);
 													$recID3+= rand(0,99592);
@@ -118,82 +120,27 @@
 									}
 								} else {echo "<div class='alert alert-info'>Currently no students in $class $subclass</div>";}
 								
-
-
-
-							// /register core subjects
-                        	// if ($_POST["go"]=="Register Subjects")
-							// {
-							// 	$term = $_SESSION["term"];
-							// 	$session = $_SESSION["session"];
-							// 	$numrows = $_POST["numrows"];
-							// 	$split = explode("_",$_POST["class"]);
-							// 	$class = $split[0]; $subclass = $split[1];
 								
-							// 	$q = mysql_query("select * from students where class='$class' and subclass='$subclass'");
-							// 	$recID = time();
-								
-							// 	$flag2 = "";
-							// 	if (@mysql_num_rows($q)>0)
-							// 	{
-							// 		for ($j=0; $j<mysql_num_rows($q); $j++)
-							// 		{
-							// 			$studentID= mysql_result($q, $j, "studentID");
-										
-										
-							// 			for ($i=1; $i<=$numrows; $i++)
-							// 			{
-							// 				$recID3 = time() + rand(00,324);
-							// 				$subjectID= $_POST["sb_$i"]; 
-											
-							// 				if ($subjectID)
-							// 				{
-							// 					//check for already registered subject
-							// 					$chck = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session' ") or die (mysql_error());
-							// 					if (@mysql_num_rows($chck)>0) {$flag="ignored";}
-							// 					else
-							// 					{
-							// 				$q2 = mysql_query("insert into reg_subjects values('$recID','$studentID','$subjectID',
-							// 				'$session','')") or die (mysql_error());
-											
-							// 					$tbl = "sc_".$subjectID;
-							// 					$q31 = mysql_query("insert into $tbl values('$recID3','$recID','$studentID','','','','','','',
-							// 					'FIRST','$session')");
-							// 					$recID3+= rand(0,99592);
-							// 					$q32 = mysql_query("insert into $tbl values('$recID3','$recID','$studentID','','','','','','',
-							// 					'SECOND','$session')");
-							// 					$recID3+= rand(0,99792);
-							// 					$q33 = mysql_query("insert into $tbl values('$recID3','$recID','$studentID','','','','','','',
-							// 					'THIRD','$session')");
-							// 					$recID3+= rand(0,99792);
-							// 					$recID += 32;
-												
-							// 					if ($q2 and $q31 and $q32 and $q33) {$flag2+=1;}
-							// 					}
-							// 				}
-											
-							// 			}
-										
-							// 		}
-							// 		if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject Ignored</div>"; $flag="";}
-							// 		if ($flag2!="") {echo "<div class='alert alert-success'>Operation Success</div>"; $flag2="";}
-							// 		else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
-									
-							// 	}//end of condition for availability of students in class
-							// 	else {echo "<div class='alert alert-info'>Currently no students in $class $subclass</div>";}
-								
-							// }
-						?>
-                        
-                    <form action="" method="post">	
+							}//end of on post checking
+						 
+						 
+						 
+						
+						 ?>
+					
+					<form action="" method="post">	
                         <div class="input-group">
                         	<select class="form-control" name="class">
                             <option value="">Select Class</option>
+								
                            		 <?php
+		
 									$sql = "select * from classes order by `classid` ASC";
 									$stmt = $pdo->prepare($sql);
+						 			$stmt -> execute();
 									if($stmt->rowCount() > 0){
 										$i=1;
+										
 										while( $row = $stmt->fetch(PDO::FETCH_OBJ)){
 											$cid = $row->classid;
 											echo "<option value='$cid'>$cid</option>";
@@ -226,7 +173,9 @@
                         	<?php
 								$sql = 'select * from subjects where type=:type order by `subjectID` ASC';
 								$stmt = $pdo->prepare($sql);
-								if($stmt->rowCout() > 0){
+						 		$stmt -> execute(['type'=>"CORE"]);
+						 		$rows = $stmt -> rowCount();
+								if($stmt->rowCount() > 0){
 									$i=1;
 									while($row = $stmt->fetch(PDO::FETCH_OBJ)){
 										$sid = $row->subjectID; $sTitle = $row->subjectTitle;
@@ -262,9 +211,12 @@
                      </form>   
                 		
                       <?php 
-                      
-                        } 
-					  if ($_GET["subID"]=="2")
+						
+						
+						}//end of subID 1
+					
+						
+					elseif ($_GET["subID"]=="2")
 					  {
 						  echo "<label>Optional Subjects Registration</label>";
 						  //optional subjects registration
@@ -272,8 +224,6 @@
                       
                       <form action="" method="post">	
                     
-                    	
-                        
                         <div class="input-group">
                         	<select class="form-control" name="class">
                             <option value="">Select Class</option>
@@ -290,21 +240,6 @@
 										}
 									}
 
-					
-									// $q = @mysql_query("select * from classes order by `classid` ASC");
-									
-									// if (@mysql_num_rows($q)>0)
-									// {	
-									// 	$rows = @mysql_num_rows($q);
-										
-									// 	for ($i=1; $i<=$rows; $i++)
-									// 	{
-									// 		$rec = @mysql_fetch_array($q);
-									// 		$cid = $rec["classid"]; $cTeacher = $rec["classTeacher"];
-											
-									// 		echo "<option value='$cid'>$cid</option>";
-									// 	}
-									// }
                     			?>
                             
                             </select>
@@ -315,10 +250,12 @@
                             <input type="submit" class="btn btn-info" value="Load Students" name="load" />
                         </div>
                      </form>
-                      <br><hr>
+					
+					<br><hr>
                       <?php
 	
-						if ($_POST["reg"]){
+						if (isset($_POST["reg"])){
+							
 							$num = $_POST["rows"];
 							$term = $_SESSION["term"];
 							$session = $_SESSION["session"];
@@ -400,6 +337,7 @@
 								}
 								if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject for a student Ignored</div>"; }
 								if ($flag1!="") {echo "<div class='alert alert-success'>Operation Success</div>";}
+								
 								else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
 							}
 
@@ -457,7 +395,7 @@
 							
 						// }
 		 					
-					  
+						}
 					  ?>
                       <form action="" method="post">
                       	
@@ -575,6 +513,8 @@
                                     <th><input type="checkbox" name="" value="" onClick="this.value=check(this.form.list)"></th> 
                                     <th>Student ID</th> <th>Student Name</th></tr>
                                     <?php
+							if (isset($_POST["load"]))
+							{
 											if ($_POST["load"]=="Load Students")
 											{
 												$class = $_POST["class"];
@@ -600,26 +540,8 @@
 													echo "<input type='hidden' name='rows' value='$stdntNum' />";
 												}
 											}
-										// if ($_POST["load"]=="Load Students")
-										// {
-										// 	$class = $_POST["class"];
-										// 	$split = explode("_",$class);
-										// 	$qx = mysql_query("select * from students where class='$split[0]' and subClass='$split[1]'");
-											
-										// 	if (@mysql_num_rows($qx)>0)
-										// 	{
-										// 		$stdntNum = @mysql_num_rows($qx);
-										// 		for ($i=1; $i<=@mysql_num_rows($qx); $i++)
-										// 		{
-										// 			$rec = mysql_fetch_array($qx);
-										// 			$stdntID = $rec["studentID"]; $fullName = $rec["lastName"] .". ". $rec["firstName"] ." ". $rec["otherNames"];
-										// 			echo "<tr> <td>$i</td> 
-										// 			<td> <input type='checkbox' id=list name='sdt_$i' value='$stdntID'> </td> 
-										// 			<td>$stdntID</td> <td>$fullName</td></tr>";
-										// 		}
-										// 		echo "<input type='hidden' name='rows' value='$stdntNum' />";
-										// 	}
-										// }
+							}
+										
 									
 									?>
                                 </table>
@@ -630,15 +552,20 @@
                             <input type="submit" class="btn btn-info" value="Register Students" name="reg" />
                         	</div>
                       </form>
-                      <?php 
-                   		}
-                    ?>
+					
+					
+					
+					<?php } //end of sub 2 
+					
+						}
+					?>
+					
                 </div>
                 
             </div>
 
 
-<?php pageBodyFooterSection();?>
+<?php pageBodyFooterSection(); ?>
 
 	<!--can right side bar here -->
-<?php  endPage();?>
+<?php  endPage(); ?>
