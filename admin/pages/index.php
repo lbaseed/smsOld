@@ -27,6 +27,7 @@
 							if ($a==25) {paymentsHistory();}
 							if ($a==26) {searchPayments();}
 							
+							//@todo-kolerian
 							//third dropdown  [manage students]
 							if ($a==31) {registerNewStudent();}
 							if ($a==32) {allStudents();}
@@ -45,6 +46,8 @@
 							if ($a==52) {allSubjects();}
 							if ($a==53) {assignSubjectTeacher();}
 							if ($a==54) {updateSubject();}
+							
+
 							
 							//sixth dropdown  [Students records]
 							if ($a==61) {studentsScores();}
