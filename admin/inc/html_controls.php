@@ -467,11 +467,10 @@
           	<ul class="treeview-menu">
             <?php
             echo "
-            <li><a href='index.php?id=61'><i class='fa fa-circle-o'></i> Class Broad Sheet</a></li>
-            
-            <li><a href='index.php?id=63'><i class='fa fa-circle-o'></i> Scores Analysis</a></li>
-			<li><a href='index.php?id=62'><i class='fa fa-circle-o'></i> Process Promotions</a></li>
-            <li><a href='index.php?id=64'><i class='fa fa-circle-o'></i> Search </a></li>
+            <li><a href='students_scores.php'><i class='fa fa-circle-o'></i> Class Broad Sheet</a></li>
+            <li><a href='students_score_analysis.php'><i class='fa fa-circle-o'></i> Scores Analysis</a></li>
+						<li><a href='students_promotions.php'><i class='fa fa-circle-o'></i> Process Promotions</a></li>
+            <li><a href='students_score_search.php'><i class='fa fa-circle-o'></i> Search </a></li>
             ";
             ?>
             </ul>
@@ -484,9 +483,9 @@
             <ul class="treeview-menu">
             <?php
             echo "
-            <li><a href='index.php?id=71'><i class='fa fa-circle-o'></i> Input Subject Scores </a></li>
+            <li><a href='students_subject_scores.php'><i class='fa fa-circle-o'></i> Input Subject Scores </a></li>
             
-            <li><a href='index.php?id=72'><i class='fa fa-circle-o'></i> Grading</a></li>
+            <li><a href='students_grading.php'><i class='fa fa-circle-o'></i> Grading</a></li>
             ";
             ?>
             </ul>
