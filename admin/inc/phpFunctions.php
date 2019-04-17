@@ -1,5 +1,7 @@
 <?php ob_start(); session_start(); 
-	 date_default_timezone_set("Africa/Lagos");  require "config.php";
+	 date_default_timezone_set("Africa/Lagos");  
+	 //require "config.php";
+	 include('config.php');
 	
 	//auto logout function
 	function autologout(){		
@@ -87,7 +89,8 @@
 	}
 	//activate new term
 	function activateTerm($term, $session)
-	{	$cterm = $_SESSION["term"];  $csession = $_SESSION["session"];
+	{	
+		$cterm = $_SESSION["term"];  $csession = $_SESSION["session"];
 		$q = mysql_query("update sessions set status='PAST' where term='$cterm' and session='$csession'");
 		$q1 = mysql_query("update sessions set status='CURRENT' where term='$term' and session='$session'");
 		setAcademicSession();
@@ -160,9 +163,9 @@
 	function getSchoolFees($term, $session)
 	{
 		$stmt  = $pdo->prepare("select * from fees where term =:term and session =:session");
-		$stmt->execute(['term'=> $term, 'session' => $session ]);
-		while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-			 $fees = $row['fees'];
+		$stmt->execute([':term'=> $term, ':session' => $session ]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $fees = $row->fees;
 			 return $fees;
 		}
 		
