@@ -98,7 +98,6 @@
 	
 	function getSubjectName($subjectID)
 	{
-<<<<<<< HEAD
 		$stmt = $pdo->prepare("select * from subjects where subjectID: subID");
 		$stmt -> execute(['subID'=>$subjectID]);
 		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
@@ -114,7 +113,6 @@
 //			return $subjectTitle;
 //		}
 		
-=======
 		global $pdo;
 
 		$stmt = $pdo->prepare("SELECT * FROM subjects WHERE subjectID = :subjectID ");
@@ -130,7 +128,6 @@
 			
 		}
 		return $subjectTitle;
->>>>>>> b1dd554636d7c0a5552e37d8a2cc422cae4ecc8f
 	}
 	
 	function getGrade($stdntScore)
@@ -177,13 +174,21 @@
 	
 	function getStudentName($studentID)
 	{
-		$fetch = mysql_query("select * from students where studentID='$studentID'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
-			
+		$stmt = $pdo->prepare("select * from students where studentID = :studentID");
+		$stmt->execute(['studentID' => $studentID ]);
+		if($stmt->rowCount > 0){
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+			$fullName = $row->LastName.' , '.$row->firstName.' '.$row->otherNames;
 			return $fullName;
 		}
+
+		// $fetch = mysql_query("select * from students where studentID='$studentID'");
+		// if (@mysql_num_rows($fetch)>0)
+		// {
+		// 	$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
+			
+		// 	return $fullName;
+		// }
 	}
 	
 	function getSchoolFees($term, $session)
