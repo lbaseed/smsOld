@@ -95,23 +95,6 @@
 	
 	function getSubjectName($subjectID)
 	{
-<<<<<<< HEAD
-		$stmt = $pdo->prepare("select * from subjects where subjectID: subID");
-		$stmt -> execute(['subID'=>$subjectID]);
-		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
-			 $subjectTitle = $row->subjectTitle;
-			 return $subjectTitle;
-		}
-		
-//		$fetch = mysql_query("select * from subjects where subjectID='$subjectID'");
-//		if (@mysql_num_rows($fetch)>0)
-//		{
-//			$subjectTitle = mysql_result($fetch, 0, "subjectTitle");
-//			
-//			return $subjectTitle;
-//		}
-		
-=======
 		global $pdo;
 
 		$stmt = $pdo->prepare("SELECT * FROM subjects WHERE subjectID = :subjectID ");
@@ -127,7 +110,6 @@
 			
 		}
 		return $subjectTitle;
->>>>>>> b1dd554636d7c0a5552e37d8a2cc422cae4ecc8f
 	}
 	
 	function getGrade($stdntScore)
