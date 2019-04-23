@@ -432,10 +432,10 @@
             <ul class="treeview-menu">
             <?php
             echo "
-            <li><a href='index.php?id=41'><i class='fa fa-circle-o'></i> Create New Class</a></li>
-            <li><a href='index.php?id=42'><i class='fa fa-circle-o'></i> List of All Classes</a></li>
-            <li><a href='index.php?id=43'><i class='fa fa-circle-o'></i> Assign Class Teacher</a></li>
-            <li><a href='index.php?id=44'><i class='fa fa-circle-o'></i> Update Class</a></li>
+            <li><a href='classes_create.php'><i class='fa fa-circle-o'></i> Create New Class</a></li>
+            <li><a href='classes_list.php'><i class='fa fa-circle-o'></i> List of All Classes</a></li>
+            <li><a href='classes_assignTeacher.php'><i class='fa fa-circle-o'></i> Assign Class Teacher</a></li>
+            <li><a href='classes_update.php'><i class='fa fa-circle-o'></i> Update Class</a></li>
             ";
             ?>
             </ul>
