@@ -45,7 +45,7 @@
 							if ($a==43) {assignClassTeacher();}
 							if ($a==44) {updateClass();}
 							
-							//fifth dropdown  [manage subjects]
+							//fifth dropdown  [manage subjects]@Kole todo
 							if ($a==51) {createSubject();}
 							if ($a==52) {allSubjects();}
 							if ($a==53) {assignSubjectTeacher();}

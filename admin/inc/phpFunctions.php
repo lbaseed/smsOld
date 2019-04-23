@@ -139,11 +139,22 @@
 	
 	function getStaffName($staffID)
 	{
-		$fetch = mysql_query("select * from staff where staffID='$staffID'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
+		// $fetch = mysql_query("select * from staff where staffID='$staffID'");
+		// if (@mysql_num_rows($fetch)>0)
+		// {
+		// 	$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
 			
+		// 	return $fullName;
+		// }
+		global $pdo;
+		$sql = "select * from staff where staffID =:staffID";
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute([':staffID'=> $staffID]);
+		$rows = $stmt->rowCount();
+		if($rows > 0)
+		{
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+			$fullName = $row->LastName.', '.$row->firstName.' '.$row->otherNames;
 			return $fullName;
 		}
 	}
