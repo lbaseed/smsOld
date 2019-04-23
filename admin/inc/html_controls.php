@@ -377,11 +377,11 @@
           <?php
           	echo "
 				<li><a href='new_staff.php'><i class='fa fa-circle-o'></i> Register New Staff</a></li>
-				<li><a href='index.php?id=12'><i class='fa fa-circle-o'></i> List of Staff</a></li>
-				<li><a href='index.php?id=13'><i class='fa fa-circle-o'></i> Assign Duties</a></li>
-				<li><a href='index.php?id=43'><i class='fa fa-circle-o'></i> Assign Classes</a></li>
-				<li><a href='index.php?id=53'><i class='fa fa-circle-o'></i> Assign Subjects</a></li>
-				<li><a href='index.php?id=16'><i class='fa fa-search'></i> Search</a></li>
+				<li><a href='staff_list.php'><i class='fa fa-circle-o'></i> List of Staff</a></li>
+				<li><a href='staff_assign_duties.php'><i class='fa fa-circle-o'></i> Assign Duties</a></li>
+				<li><a href='staff_assign_classes.php'><i class='fa fa-circle-o'></i> Assign Classes</a></li>
+				<li><a href='staff_assign_subject.php'><i class='fa fa-circle-o'></i> Assign Subjects</a></li>
+				<li><a href='staff_search.php'><i class='fa fa-search'></i> Search</a></li>
 			";
 		  ?>
             
