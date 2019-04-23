@@ -89,16 +89,16 @@
 							{
 								$actvTbl = strtolower("sc_".$_POST["tbl"]);
 								$recRows = $_POST["rows"];
-								
+								$total = 0;
 								for ($k=1; $k<=$recRows; $k++)
 								{
 									$arecID = $_POST["rec_$k"];
 									
-									$uca1 =  mysql_real_escape_string(filter_var($_POST["ca1_$k"], FILTER_SANITIZE_STRING));
-									$uca2 =  mysql_real_escape_string(filter_var($_POST["ca2_$k"], FILTER_SANITIZE_STRING));
-									$uca3 = mysql_real_escape_string(filter_var($_POST["ca3_$k"], FILTER_SANITIZE_STRING));
-									$uca4 = mysql_real_escape_string(filter_var($_POST["ca4_$k"], FILTER_SANITIZE_STRING));
-									$uexam = mysql_real_escape_string(filter_var($_POST["exam_$k"], FILTER_SANITIZE_STRING));
+									$uca1 =  (filter_var($_POST["ca1_$k"], FILTER_SANITIZE_STRING));
+									$uca2 =  (filter_var($_POST["ca2_$k"], FILTER_SANITIZE_STRING));
+									$uca3 = (filter_var($_POST["ca3_$k"], FILTER_SANITIZE_STRING));
+									$uca4 = (filter_var($_POST["ca4_$k"], FILTER_SANITIZE_STRING));
+									$uexam = (filter_var($_POST["exam_$k"], FILTER_SANITIZE_STRING));
 									$total = $uca1 + $uca2 + $uca3 + $uca4 + $uexam;
 									
 									$stmt = $pdo->prepare("UPDATE $actvTbl SET ca1=:uca1 , ca2=:uca2, ca3=:uca3, ca4=:uca4, exam=:uexam, total=:total WHERE recID = :arecID ");

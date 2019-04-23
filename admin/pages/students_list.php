@@ -42,7 +42,7 @@
             $sid = $row->studentID;
             $fullName = $row->lastName.', &nbsp '.$row->firstName.' &nbsp '.$row->otherNames;
             $dob = $row->dob; $class = $row->class.' - '.$row->subClass;
-            echo "<tr><td>$i</td> <td> <a href='index.php?id=sid= $sid'>$sid</a></td> <td>$fullName</td> <td>$dob</td> <td>$class</td></tr>";
+            echo "<tr><td>$i</td> <td> <a href='?sid=$sid'>$sid</a></td> <td>$fullName</td> <td>$dob</td> <td>$class</td></tr>";
             $i++;
          }
     ?>

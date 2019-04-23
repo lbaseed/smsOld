@@ -1,5 +1,9 @@
 <?php include "../inc/html_controls.php";?>
-
+<?php
+										$_SESSION["smuser"] = 'SP/1001';
+										$_SESSION["clrs"] = "ADMIN";
+										//$_SESSION["pic"] = $pic;
+?>
 
 
 <?php initializePage(); ?>

@@ -47,7 +47,7 @@
 			if ($extn=="jpg" || $extn=="gif" ||$extn=="png" || $extn=="JPG" || $extn=="GIF" || $extn=="PNG" )
 			{
 				$dstName = $fileName.".".$extn;
-				$copy = copy($tmp, "files/$location/". $dstName);
+				$copy = copy($tmp, "../files/$location/". $dstName);
 		
 				if ($copy) {return $dstName;}
 		
@@ -98,20 +98,7 @@
 	
 	function getSubjectName($subjectID)
 	{
-		$stmt = $pdo->prepare("select * from subjects where subjectID: subID");
-		$stmt -> execute(['subID'=>$subjectID]);
-		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
-			 $subjectTitle = $row->subjectTitle;
-			 return $subjectTitle;
-		}
 		
-//		$fetch = mysql_query("select * from subjects where subjectID='$subjectID'");
-//		if (@mysql_num_rows($fetch)>0)
-//		{
-//			$subjectTitle = mysql_result($fetch, 0, "subjectTitle");
-//			
-//			return $subjectTitle;
-//		}
 		
 		global $pdo;
 
@@ -193,6 +180,7 @@
 	
 	function getSchoolFees($term, $session)
 	{
+		global $pdo;
 		$stmt  = $pdo->prepare("select * from fees where term =:term and session =:session");
 		$stmt->execute([':term'=> $term, ':session' => $session ]);
 		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
@@ -200,13 +188,7 @@
 			 return $fees;
 		}
 		
-		// $fetch = mysql_query("select * from fees where term='$term' and session='$session'");
-		// if (@mysql_num_rows($fetch)>0)
-		// {
-		// 	$fees = mysql_result($fetch, 0, "fees");
-			
-		// 	return $fees;
-		// }
+		
 	}
 	
 	function getSchoolFeesPaid($sid, $term, $session)

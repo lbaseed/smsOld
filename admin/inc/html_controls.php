@@ -547,6 +547,7 @@
 		<?php
 	}
 
+
 	function pageFooter(){
 		?>
 	
