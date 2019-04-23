@@ -37,7 +37,7 @@
 								$q = $stmt->execute(['class'=>$class, 'subclass'=>$subclass]);
 								$recID = time();
 								$flag2 = "";
-								if($q->rowCount() > 0){
+								if($stmt->rowCount() > 0){
 									for ($j=0; $j < $q->rowCount(); $j++){
 										$row = $q->fetchAll(PDO::FETCH_OBJ);
 										$studentID = $row->studentID;
@@ -122,10 +122,6 @@
 								
 								
 							}//end of on post checking
-						 
-						 
-						 
-						
 						 ?>
 					
 					<form action="" method="post">	

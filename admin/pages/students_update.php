@@ -4,6 +4,9 @@
 
     <?php pageBodyTopSection();?>
 <!-- content -->
+<?php 
+    if (isset($_GET["sid"])) {$id = $_GET["sid"];} else {$id="";}
+?>
 <div class="box box-info">
             	<div class="box-header with-border">
                 	<h3 class="box-title">Update Student Details</h3>
@@ -21,7 +24,7 @@
                         
                     <?php
 
-                        if(isset($_POST["updateRec"])){
+                        if($_POST["updateRec"]){
                             $u_surname = trim($_POST["lname"]);
                         	$u_firstName = trim($_POST["fname"]);
                         	$u_otherName = trim($_POST["oname"]);
@@ -31,7 +34,7 @@
                         	$u_class = trim($_POST["stndtClass"]);
 
                         	$u_parent_email = trim($_POST["email"]);
-                        	$u_parent_address = mysql_real_escape_string(trim($_POST["pAddress"]));
+                        	$u_parent_address = trim($_POST["pAddress"]);
 
                             $pic = $_FILES["pic"]["name"];
                             if ($pic){
@@ -52,7 +55,7 @@
 
                         //fetch data query
                         $stmt = $pdo->prepare("select * from students where studentID=:studentID");
-                        $stmt->execute(['studentID'=>$id ]);
+                        $stmt->execute(['studentID'=> $id ]);
                         if($stmt->rowCount() > 0){
                             $row = $stmt->fetch(PDO::FETCH_OBJ);
                             $lname = $row->lastName;
@@ -203,10 +206,10 @@
                         <?php
                             $sql = "select * from parents where phone=:phone";
                             $stmt = $pdo->prepare($sql);
-                            $stmt->execute(['phone'=>$email]);
+                            $stmt->execute(['phone'=> $email]);
                             if($stmt->rowCount() > 0 ){
                                 $row = $stmt->fetch(PDO::FETCH_OBJ);
-                                $pFullName = $row->lastName.",  ".$row->otherNames;
+                                $pFullName = $row->lastName." , ".$row->otherNames;
                                 $pAdd = $row->address;
                                 $pPhone = $row->phone; $pEmail = $row->email;
                             }
@@ -219,18 +222,18 @@
 							// }
 						?>
                         <div class="input-group col-lg-10">
-                        	<label>Full Name</label>: <label class="form-control"><?php echo $pFullName?></label>
+                        	<label>Full Name</label>: <label class="form-control"><?php $pFullName ?></label>
                         </div>
                         
                         <br>
                         <div class="input-group col-lg-10">
                         	<span class="input-group-addon"><i class="fa fa-phone"></i></span>
-                            <input type="text" class="form-control" placeholder="Phone Number" name="phone" disabled value="<?php echo $pPhone?>" />
+                            <input type="text" class="form-control" placeholder="Phone Number" name="phone" disabled value="<?php echo $pPhone ?>" />
                         </div>
                         <br>
                         <div class="input-group col-lg-10">
                         	<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                            <input type="text" class="form-control" placeholder="Email" name="email" value="<?php echo $pEmail?>" />
+                            <input type="text" class="form-control" placeholder="Email" name="email" value="<?php echo $pEmail ?>" />
                         </div>
          				<br>
                         <div class="input-group col-lg-10">

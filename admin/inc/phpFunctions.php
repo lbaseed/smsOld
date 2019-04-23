@@ -1,5 +1,7 @@
 <?php ob_start(); session_start(); 
-	 date_default_timezone_set("Africa/Lagos");  require "config.php";
+	 date_default_timezone_set("Africa/Lagos");  
+	 //require "config.php";
+	 include('config.php');
 	
 	//auto logout function
 	function autologout(){		
@@ -87,7 +89,8 @@
 	}
 	//activate new term
 	function activateTerm($term, $session)
-	{	$cterm = $_SESSION["term"];  $csession = $_SESSION["session"];
+	{	
+		$cterm = $_SESSION["term"];  $csession = $_SESSION["session"];
 		$q = mysql_query("update sessions set status='PAST' where term='$cterm' and session='$csession'");
 		$q1 = mysql_query("update sessions set status='CURRENT' where term='$term' and session='$session'");
 		setAcademicSession();
@@ -95,6 +98,21 @@
 	
 	function getSubjectName($subjectID)
 	{
+		$stmt = $pdo->prepare("select * from subjects where subjectID: subID");
+		$stmt -> execute(['subID'=>$subjectID]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $subjectTitle = $row->subjectTitle;
+			 return $subjectTitle;
+		}
+		
+//		$fetch = mysql_query("select * from subjects where subjectID='$subjectID'");
+//		if (@mysql_num_rows($fetch)>0)
+//		{
+//			$subjectTitle = mysql_result($fetch, 0, "subjectTitle");
+//			
+//			return $subjectTitle;
+//		}
+		
 		global $pdo;
 
 		$stmt = $pdo->prepare("SELECT * FROM subjects WHERE subjectID = :subjectID ");
@@ -156,21 +174,29 @@
 	
 	function getStudentName($studentID)
 	{
-		$fetch = mysql_query("select * from students where studentID='$studentID'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
-			
+		$stmt = $pdo->prepare("select * from students where studentID = :studentID");
+		$stmt->execute(['studentID' => $studentID ]);
+		if($stmt->rowCount > 0){
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+			$fullName = $row->LastName.' , '.$row->firstName.' '.$row->otherNames;
 			return $fullName;
 		}
+
+		// $fetch = mysql_query("select * from students where studentID='$studentID'");
+		// if (@mysql_num_rows($fetch)>0)
+		// {
+		// 	$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
+			
+		// 	return $fullName;
+		// }
 	}
 	
 	function getSchoolFees($term, $session)
 	{
 		$stmt  = $pdo->prepare("select * from fees where term =:term and session =:session");
-		$stmt->execute(['term'=> $term, 'session' => $session ]);
-		while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-			 $fees = $row['fees'];
+		$stmt->execute([':term'=> $term, ':session' => $session ]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $fees = $row->fees;
 			 return $fees;
 		}
 		

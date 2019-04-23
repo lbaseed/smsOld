@@ -377,11 +377,11 @@
           <?php
           	echo "
 				<li><a href='new_staff.php'><i class='fa fa-circle-o'></i> Register New Staff</a></li>
-				<li><a href='index.php?id=12'><i class='fa fa-circle-o'></i> List of Staff</a></li>
-				<li><a href='index.php?id=13'><i class='fa fa-circle-o'></i> Assign Duties</a></li>
-				<li><a href='index.php?id=43'><i class='fa fa-circle-o'></i> Assign Classes</a></li>
-				<li><a href='index.php?id=53'><i class='fa fa-circle-o'></i> Assign Subjects</a></li>
-				<li><a href='index.php?id=16'><i class='fa fa-search'></i> Search</a></li>
+				<li><a href='staff_list.php'><i class='fa fa-circle-o'></i> List of Staff</a></li>
+				<li><a href='staff_assign_duties.php'><i class='fa fa-circle-o'></i> Assign Duties</a></li>
+				<li><a href='staff_assign_classes.php'><i class='fa fa-circle-o'></i> Assign Classes</a></li>
+				<li><a href='staff_assign_subject.php'><i class='fa fa-circle-o'></i> Assign Subjects</a></li>
+				<li><a href='staff_search.php'><i class='fa fa-search'></i> Search</a></li>
 			";
 		  ?>
             
@@ -414,11 +414,11 @@
             <ul class="treeview-menu">
             <?php
             echo "
-            <li><a href='index.php?id=31'><i class='fa fa-circle-o'></i> Register New Student</a></li>
-            <li><a href='index.php?id=32'><i class='fa fa-circle-o'></i> List of All Students</a></li>
-            <li><a href='index.php?id=33'><i class='fa fa-circle-o'></i> Register Subjects</a></li>
-            <li><a href='index.php?id=34'><i class='fa fa-circle-o'></i> Update Student Infor</a></li>
-            <li><a href='index.php?id=35'><i class='fa fa-search'></i> Search</a></li>
+            <li><a href='students_new.php'><i class='fa fa-circle-o'></i> Register New Student</a></li>
+            <li><a href='students_list.php'><i class='fa fa-circle-o'></i> List of All Students</a></li>
+            <li><a href='students_register_subject.php'><i class='fa fa-circle-o'></i> Register Subjects</a></li>
+            <li><a href='students_update.php'><i class='fa fa-circle-o'></i> Update Student Infor</a></li>
+            <li><a href='students_search.php'><i class='fa fa-search'></i> Search</a></li>
             ";
             ?>
             </ul>
