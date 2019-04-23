@@ -27,6 +27,7 @@
 							if ($a==25) {paymentsHistory();}
 							if ($a==26) {searchPayments();}
 							
+							//@todo-kolerian
 							//third dropdown  [manage students]
 							if ($a==31) {registerNewStudent();}
 							if ($a==32) {allStudents();}
@@ -34,7 +35,7 @@
 							if ($a==34) {updateStudent();}
 							if ($a==35) {searchStudents();}
 							
-							//fourth dropdown  [manage classes]
+							//fourth dropdown  [manage classes] @Kole Todo
 							if ($a==41) {createClass();}
 							if ($a==42) {allClasses();}
 							if ($a==43) {assignClassTeacher();}
@@ -45,6 +46,8 @@
 							if ($a==52) {allSubjects();}
 							if ($a==53) {assignSubjectTeacher();}
 							if ($a==54) {updateSubject();}
+							
+
 							
 							//sixth dropdown  [Students records]
 							if ($a==61) {studentsScores();}

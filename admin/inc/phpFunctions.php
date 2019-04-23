@@ -1,5 +1,7 @@
 <?php ob_start(); session_start(); 
-	 date_default_timezone_set("Africa/Lagos");  require "config.php";
+	 date_default_timezone_set("Africa/Lagos");  
+	 //require "config.php";
+	 include('config.php');
 	
 	//auto logout function
 	function autologout(){		
@@ -87,7 +89,8 @@
 	}
 	//activate new term
 	function activateTerm($term, $session)
-	{	$cterm = $_SESSION["term"];  $csession = $_SESSION["session"];
+	{	
+		$cterm = $_SESSION["term"];  $csession = $_SESSION["session"];
 		$q = mysql_query("update sessions set status='PAST' where term='$cterm' and session='$csession'");
 		$q1 = mysql_query("update sessions set status='CURRENT' where term='$term' and session='$session'");
 		setAcademicSession();
@@ -95,13 +98,36 @@
 	
 	function getSubjectName($subjectID)
 	{
-		$fetch = mysql_query("select * from subjects where subjectID='$subjectID'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$subjectTitle = mysql_result($fetch, 0, "subjectTitle");
-			
-			return $subjectTitle;
+		$stmt = $pdo->prepare("select * from subjects where subjectID: subID");
+		$stmt -> execute(['subID'=>$subjectID]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $subjectTitle = $row->subjectTitle;
+			 return $subjectTitle;
 		}
+		
+//		$fetch = mysql_query("select * from subjects where subjectID='$subjectID'");
+//		if (@mysql_num_rows($fetch)>0)
+//		{
+//			$subjectTitle = mysql_result($fetch, 0, "subjectTitle");
+//			
+//			return $subjectTitle;
+//		}
+		
+		global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM subjects WHERE subjectID = :subjectID ");
+		$stmt->execute(['subjectID' => $subjectID]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
+		{
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+			$subjectTitle = $row->subjectTitle;
+			
+		}
+		return $subjectTitle;
 	}
 	
 	function getGrade($stdntScore)
@@ -148,25 +174,39 @@
 	
 	function getStudentName($studentID)
 	{
-		$fetch = mysql_query("select * from students where studentID='$studentID'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
-			
+		$stmt = $pdo->prepare("select * from students where studentID = :studentID");
+		$stmt->execute(['studentID' => $studentID ]);
+		if($stmt->rowCount > 0){
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+			$fullName = $row->LastName.' , '.$row->firstName.' '.$row->otherNames;
 			return $fullName;
 		}
+
+		// $fetch = mysql_query("select * from students where studentID='$studentID'");
+		// if (@mysql_num_rows($fetch)>0)
+		// {
+		// 	$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
+			
+		// 	return $fullName;
+		// }
 	}
 	
 	function getSchoolFees($term, $session)
 	{
-		
-		$fetch = mysql_query("select * from fees where term='$term' and session='$session'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$fees = mysql_result($fetch, 0, "fees");
-			
-			return $fees;
+		$stmt  = $pdo->prepare("select * from fees where term =:term and session =:session");
+		$stmt->execute([':term'=> $term, ':session' => $session ]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $fees = $row->fees;
+			 return $fees;
 		}
+		
+		// $fetch = mysql_query("select * from fees where term='$term' and session='$session'");
+		// if (@mysql_num_rows($fetch)>0)
+		// {
+		// 	$fees = mysql_result($fetch, 0, "fees");
+			
+		// 	return $fees;
+		// }
 	}
 	
 	function getSchoolFeesPaid($sid, $term, $session)
@@ -198,84 +238,120 @@
 	
 	function getSubjectRegID($stdntID, $subjectID)
 	{
-		$term = $_SESSION["term"];
-		$session = $_SESSION["session"];
+		global $pdo;
+		//$term = $_SESSION["term"];
+		$term = 'first';
+		//$session = $_SESSION["session"];
+		$session = '2017/2018';
 		$recID = "";
-		
-		$q = mysql_query("select * from reg_subjects where studentID='$stdntID' and subjectID='$subjectID' and session='$session'");
-		if (@mysql_num_rows($q)>0)
+
+		$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :stdntID AND subjectID = :subjectID AND session = :session");
+		$stmt->execute(['stdntID' => $stdntID, 'subjectID' => $subjectID, 'session'=> $session]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
 		{
-			$recID = mysql_result($q, 0, "recID");
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+			$recID = $row->recID;
 		}
+		
 		
 		return $recID;
 	}
 	
 	function getSubjectScore($recID, $tbl, $term)
 	{
+
 		$score = "";
-		
-		$q = mysql_query("select * from $tbl where ref='$recID' and term='$term'");
-		
-		if (@mysql_num_rows($q)>0)
+
+		global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM $tbl WHERE ref = :ref AND term = :term");
+		$stmt->execute(['ref' => $recID, 'term' => $term]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
 		{
-			$score = mysql_result($q, 0, "total");
+			$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+			$score = $row->total;
 		}
 		
+		
 		return $score;
+		
 	}
+
 			//highest subject scorer
 	function highestSubjectScore($subjectID, $class)
 	{
 
-								$split = explode ("_",$class);
-								$mclass = $split[0]; $subclass = $split[1];
-								$term = $_SESSION["term"];
-								$session = $_SESSION["session"];
-								
-								$studentList = array(array());
-								
-						$q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
-									if (@mysql_num_rows($q)>0)
-									{
-										$rows = mysql_num_rows($q);
-										
-										for ($i=0; $i<$rows; $i++)
-										{
-											$rec = mysql_fetch_array($q);
-											$studentID = $rec["studentID"];
-											
-											$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
-											if (@mysql_num_rows($q2)>0)
-											{
-												
-												$recID = mysql_result($q2,0,"recID");
-												$tbl = strtolower("sc_".$subjectID);
-												
-												
-												$score = getSubjectScore($recID, $tbl, $term);
-													
-													//$newData = array('score'=>$score,'student'=>$studentID);
-													
-												$studentList[$i]['score'] = $score;
-												$studentList[$i]['student']= $studentID;
-													
-											}//check record availability in registered subjects table
-											
-										}// end of loping students table
-										
+		$split = explode ("_",$class);
+		$mclass = $split[0]; 
+		$subclass = $split[1];
+		//$term = $_SESSION["term"];
+		$term = 'FIRST';
+		//$session = $_SESSION["session"];
+		$session = '2018/2019';
+		
+		$studentList = array(array());
 
-										
-										foreach ($studentList as $key => $row) {
-												$sscore[$key] = $row['score'];
-											}
-											
-											array_multisort($sscore, SORT_DESC, $studentList);
+		global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subclass = :subclass");
+		$stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
+		{
+			for ($i=0; $i<$rows; $i++)
+			{
+				$row = $stmt->fetch(PDO::FETCH_OBJ); 
+
+				$studentID = $row->studentID;
+
+				$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :studentID AND subjectID = :subjectID AND session = :acsession");
+				$stmt->execute(['studentID' => $studentID, 'subjectID' => $subjectID, 'acsession' => $session]);
+
+				$rows = $stmt->rowCount();
+
+				if ($rows>0)
+				{
+					$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+					$recID = $row->recID;
+					$tbl = strtolower("sc_".$subjectID);
+
+					$score = getSubjectScore($recID, $tbl, $term);
+
+						//$newData = array('score'=>$score,'student'=>$studentID);
+							
+						$studentList[$i]['score'] = $score;
+						$studentList[$i]['student']= $studentID;
+									
+							}//check record availability in registered subjects table
+							
+						}// end of loping students table
 						
-										return $studentList;
-									}
+
+						
+						foreach ($studentList as $key => $row) {
+								$sscore[$key] = $row['score'];
+							}
+							
+							array_multisort($sscore, SORT_DESC, $studentList);
+
+						return $studentList;
+					}
+
+
 									
 	}
+
 	//lowest in class
 	function lowestSubjectScore($subjectID, $class)
 	{
@@ -1094,41 +1170,48 @@ text-align: left;  Center our text
 	}
 	
 	//number of credits
-	function numCredits($sid)
+	function numCredits($studentID)
 	{
-		$session = $_SESSION["session"];
+		//$session = $_SESSION["session"];
+		$session = '2018/2019';
+
+		global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :studentID AND session = :session ORDER BY `subjectID` ASC ");
+		$stmt->execute(['studentID' => $studentID, 'session' => $session]);
+
+		$rows = $stmt->rowCount();
+		$credits = 0;
+
+		if ($rows>0)
+		{
+			for ($i=0; $i<=$rows; $i++)
+			{
+				$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+				$recID = $row->recID;
+				$subjectID =  $row->subjectID;
+				$tbl = "sc_".$subjectID;
 		
-		$query = @mysql_query("select * from reg_subjects where studentID='$sid' and session='$session' order by `subjectID` ASC") or die (mysql_error());
+				$subjectName = getSubjectName($subjectID);
+				$firstTerm = getSubjectScore($recID, $tbl,"FIRST");
+				$scndTerm = getSubjectScore($recID, $tbl,"SECOND");
+				$thirdTerm = getSubjectScore($recID, $tbl,"THIRD");
+                   
+				$total = round(($firstTerm + $scndTerm + $thirdTerm)/3, 1);
+				$grade = getGrade($total);
+				$remark = getRemark($grade);
 				
-                $credits = 0;
-				 
-                if (@mysql_num_rows($query)>0)
-                {
-                	$rows = @mysql_num_rows($query); 
-                    
-                    for ($j=1; $j<=$rows; $j++)
-                    {
-                    	$rec = mysql_fetch_array($query);
-						$recID = $rec["recID"];  $subjectID = $rec["subjectID"];
-						$tbl = "sc_".$subjectID;
-						$subjectName = getSubjectName($subjectID);
-						$firstTerm = getSubjectScore($recID, $tbl,"FIRST");
-						$scndTerm = getSubjectScore($recID, $tbl,"SECOND");
-						$thirdTerm = getSubjectScore($recID, $tbl,"THIRD");
+				if ($total>=50)
+				{
+					$credits +=1;
+				}
+					$totalScore += $total;		
 						
-						$total = round(($firstTerm + $scndTerm + $thirdTerm)/3, 1);
-						$grade = getGrade($total);
-						$remark = getRemark($grade);
-						
-						if ($total>=50)
-						{
-							$credits +=1;
-						}
-							$totalScore += $total;
-						
-                    }//end of loop
-                }
-				return $credits;
+			}	
+		}		
+		
+		return $credits;
 	}
 	
 	//promotion function
@@ -1147,21 +1230,31 @@ text-align: left;  Center our text
 		//number of promoted
 		$numPromoted = 0;
 		$numNotPromoted = 0;
-		
-		$q = @mysql_query("select * from students where class='$mclass' and subClass='$subClass' and status='ACTIVE'");
-		
-		if (@mysql_num_rows($q)>0)
+
+		global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subclass = :subclass and status='ACTIVE' ");
+		$stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
 		{
-			for ($i=0; $i<@mysql_num_rows($q); $i++)
+			for ($i=0; $i<$rows; $i++)
 			{
-				$sid = mysql_result($q, $i, "studentID");
-				
-				$numCredits = numCredits($sid);
-				
+				$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+				$studentID = $row->studentID;
+
+				$numCredits = numCredits($studentID);
+
 				if ($numCredits >= $criteria)
 				{
 					//update student's class
-					$q1 = mysql_query("update students set class='$mclassPro', subClass='$subClassPro' where studentID='$sid'") or die (mysql_error());
+
+					$stmt = $pdo->prepare("UPDATE students SET class='$mclassPro', subClass='$subClassPro' WHERE studentID = :studentID ");
+					$stmt->execute(['studentID' => $studentID]);
+
 					$numPromoted+=1;
 				}
 				else
