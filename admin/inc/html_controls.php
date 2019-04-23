@@ -498,9 +498,9 @@
           <ul class="treeview-menu">
           <?php
           echo "
-            <li class='treeview'><a href='index.php?id=81'><i class='fa fa-circle-o'></i> Select Class </a></li>
-			<li class='treeview'><a href='index.php?id=81'><i class='fa fa-circle-o'></i> Individual Result </a></li>
-            <li><a href='index.php?id=82'><i class='fa fa-circle-o'></i> Ratings</a></li>
+            <li class='treeview'><a href='result_class.php'><i class='fa fa-circle-o'></i> Select Class </a></li>
+			<li class='treeview'>result_individual.php'><i class='fa fa-circle-o'></i> Individual Result </a></li>
+            <li><a href='result_ratings.php'><i class='fa fa-circle-o'></i> Ratings</a></li>
             
             ";
             ?>
