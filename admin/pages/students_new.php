@@ -13,55 +13,6 @@
                 
                 	<?php
                     		
-                            // if (isset($_POST["go"])=="Submit")
-                            // {
-                                        
-                            // 			$sid = mysql_real_escape_string(filter_var(strtoupper($_POST['sid']), FILTER_SANITIZE_STRING));
-                            // 			$lname = mysql_real_escape_string(filter_var(strtoupper($_POST['lname']), FILTER_SANITIZE_STRING));
-                            // 			$fname = mysql_real_escape_string(filter_var(strtoupper($_POST['fname']), FILTER_SANITIZE_STRING));
-                            // 			$oname = mysql_real_escape_string(filter_var(strtoupper($_POST['oname']), FILTER_SANITIZE_STRING));
-                            // 			$sex = mysql_real_escape_string(filter_var(strtoupper($_POST['gender']), FILTER_SANITIZE_STRING));
-                            // 			$address = mysql_real_escape_string(filter_var(strtoupper($_POST['address']), FILTER_SANITIZE_STRING));
-                            // 			$dob = mysql_real_escape_string(filter_var(strtoupper($_POST['dob']), FILTER_SANITIZE_STRING));
-                            // 			$class = mysql_real_escape_string(filter_var(strtoupper($_POST['stndtClass']), FILTER_SANITIZE_STRING));
-                                        
-                            // 			//parent info
-                            // 			$pLname = mysql_real_escape_string(filter_var(strtoupper($_POST['parentLname']), FILTER_SANITIZE_STRING));
-                            // 			$POname = mysql_real_escape_string(filter_var(strtoupper($_POST['parentOname']), FILTER_SANITIZE_STRING));
-                            // 			$phone = mysql_real_escape_string(filter_var(strtoupper($_POST['phone']), FILTER_SANITIZE_STRING));
-                            // 			$email = mysql_real_escape_string(filter_var(strtolower($_POST['email']), FILTER_SANITIZE_STRING));
-                            // 			$pAddress = mysql_real_escape_string(filter_var(strtoupper($_POST['pAddress']), FILTER_SANITIZE_STRING));
-                                        
-                            // 			if ($sid and $lname and $fname and $sex and $class!="SELECT")
-                            // 			{
-                            // 				$nsid = str_replace("/","_",$sid);
-                            // 				$done = upload("pic", $nsid, "students", 400*1024);
-                                            
-                                            
-                                            
-                            // 					$split = explode("_",$class);
-                            // 					$mclass = $split[0]; $sclass= $split[1];
-                            // 					$ref = time();
-                            // 					$term = $_SESSION["term"];  $session= $_SESSION["session"];
-                            // 					$fees = getSchoolFees($term, $session);
-                            // 					$q = @mysql_query("insert into students values('$sid','$lname','$fname','$oname','$sex','$dob','$address','$mclass','$sclass','$phone','ACTIVE','$done')") or die (mysql_error());
-                            // 					$q3 = mysql_query("insert into transaction values('$ref','$sid','$fees','0','$fees','$term','$session')");
-                            // 					//check phone
-                            // 					$chck = mysql_query("select * from parents where phone='$phone'");
-                            // 					if (mysql_num_rows($chck)>0){$q2="done";}
-                            // 					else {
-                            // 					$q2 = mysql_query("insert into parents values('$email','$pLname','$POname','$pAddress','$phone','password')") or die (mysql_error());
-                            // 					}
-                                                
-                            // 					if ($q and $q2)  { echo "<div class='alert alert-success'>Operation Success </div>"; $sid="";
-                            // 					$lname=""; $fname=""; $oname=""; $address=""; $dob=""; $sex=""; $class=""; $pLname=""; $POname=""; $phone="";
-                            // 					$pAddress="";
-                            // 					}
-                            // 					else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
-                                            
-                            // 			}
-                            // }
-
                       if(isset($_POST['go'])){
                           
                         $sid = filter_var(strtoupper($_POST['studentID']), FILTER_SANITIZE_STRING);
@@ -70,7 +21,10 @@
                         $oname = filter_var(strtoupper($_POST['otherNames']), FILTER_SANITIZE_STRING);
                         $sex = filter_var(strtoupper($_POST['gender']), FILTER_SANITIZE_STRING);
                         $address = filter_var(strtoupper($_POST['address']), FILTER_SANITIZE_STRING);
-                        $dob = filter_var(strtoupper($_POST['dob']), FILTER_SANITIZE_STRING);
+						  //dob convertion to sql date format
+                        $dt = filter_var(strtoupper($_POST['dob']), FILTER_SANITIZE_STRING);
+						  $date = DateTime::createFromFormat("d/m/Y" , $dt);
+						 $dob = $date->format('Y-m-d');
                         $class = filter_var(strtoupper($_POST['class']), FILTER_SANITIZE_STRING);
                         
                         //parent info
@@ -94,19 +48,22 @@
 
                         //$term = $_SESSION["term"];  $session = $_SESSION["session"]; it has to come from session
 
-                        $term = "FIRST";  $session = "2015/2016";
+                        $term = "FIRST";  $session = "2018/2019";
                         $fees = getSchoolFees($term, $session);
 
-                        $stmt = $pdo->prepare("insert into students (studentID,lastName,firstName, otherNames, gender, dob, address, parentID, status, pic) values(:studentID,:lastName, :firstName,:otherNames,:gender,:dob, :address, :parentID, :status, :pic)");
+                        $stmt = $pdo->prepare("insert into students (studentID,lastName,firstName, otherNames, gender, dob, address, class, subClass, parentID, status, pic) values(:studentID,:lastName, :firstName,:otherNames,:gender,:dob, :address, :class, :subClass, :parentID, :status, :pic)");
                         $q = $stmt->execute([
+							
                             ':studentID'=>$sid,
                             ':lastName'=>$lname,
                             ':firstName' => $fname,
                             ':otherNames'=> $oname,
                             ':gender'=>$sex,
                             ':dob' => $dob,
-                            ':address'=> $pAddress,
-                            ':parentID'=>'080xxxxxxxx',
+                            ':address'=> $address,
+							':class'=> $mclass,
+							':subClass'=> $sclass,
+                            ':parentID'=> $phone,
                             ':status'=> 'ACTIVE',
                             ':pic'=> $done
                         ]);
@@ -116,14 +73,14 @@
 
 
                         $stmt = $pdo->prepare("select * from parents where phone = :phone");
-                        $chck = $stmt->execute([':phone'=> $phone]);
-                        if($chck->countRow() > 0) { $q2 = "done";}
+                        $stmt->execute([':phone'=> $phone]);
+                        if($stmt->rowCount() > 0) { $q2 = "done";}
                             else{
                                 $stmt = $pdo->prepare("insert into parents(email, lastName, otherNames, address, phone, password) values(:email, :lastName, :otherNames, :address, :phone, :password)");
                                 $q2 = $stmt->execute([':email'=>$email, ':lastName'=>$pLname,  ':otherNames'=>$POname, ':address'=> $pAddress, ':phone'=>$phone, ':password'=>'password']);
                             }
-                        if($q and $q2){
-                            echo "<div class='alert alert-success'>Operation Success </div>"; 
+                        if($q){
+                            echo "<div class='alert alert-success'>Registration Successfull </div>"; 
                             $sid=$lname=$fname=$oname=$address=$dob=$sex=$class=$pLname=$POname=$phone=$pAddress="";
                                     
                         }else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
@@ -131,7 +88,7 @@
                 }
                             
 					?>
-                	<form action="<?php $_SERVER['PHP_SELF']; ?>" method="post" enctype="multipart/form-data" id="form_new">
+                	<form action="" method="post" enctype="multipart/form-data" id="form_new">
                     	<div class="input-group col-lg-10">
                         	<span class="input-group-addon"><i class="fa fa-pencil"></i></span>
                             <input type="text" class="form-control " placeholder="Admission Number eg sec/2018/1001" value="" name="studentID" id="sid"/>
