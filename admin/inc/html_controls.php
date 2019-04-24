@@ -451,7 +451,7 @@
             <?php
             echo "
             <li><a href='subjects_create.php'><i class='fa fa-circle-o'></i> Create New Subject</a></li>
-            <li><a href='subjects_list.php'><i class='fa fa-circle-o'></i> List of All Subjects</a></li>
+            <li><a href='subjects_all.php'><i class='fa fa-circle-o'></i> List of All Subjects</a></li>
             <li><a href='subjects_assignTeacher.php'><i class='fa fa-circle-o'></i> Assign Subject Teacher</a></li>
             <li><a href='subjects_update.php'><i class='fa fa-circle-o'></i> Update Subject</a></li>
             ";
