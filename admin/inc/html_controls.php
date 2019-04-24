@@ -450,8 +450,8 @@
           	<ul class="treeview-menu">
             <?php
             echo "
-            <li><a href='index.php?id=51'><i class='fa fa-circle-o'></i> Create New Subject</a></li>
-            <li><a href='index.php?id=52'><i class='fa fa-circle-o'></i> List of All Subjects</a></li>
+            <li><a href='subjects_create.php'><i class='fa fa-circle-o'></i> Create New Subject</a></li>
+            <li><a href='subjects_list.php'><i class='fa fa-circle-o'></i> List of All Subjects</a></li>
             <li><a href='index.php?id=53'><i class='fa fa-circle-o'></i> Assign Subject Teacher</a></li>
             <li><a href='index.php?id=54'><i class='fa fa-circle-o'></i> Update Subject</a></li>
             ";
