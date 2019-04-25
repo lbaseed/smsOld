@@ -139,13 +139,7 @@
 	
 	function getStaffName($staffID)
 	{
-		// $fetch = mysql_query("select * from staff where staffID='$staffID'");
-		// if (@mysql_num_rows($fetch)>0)
-		// {
-		// 	$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
-			
-		// 	return $fullName;
-		// }
+		
 		global $pdo;
 		$sql = "select * from staff where staffID =:staffID";
 		$stmt = $pdo->prepare($sql);
@@ -180,13 +174,7 @@
 			return $fullName;
 		}
 
-		// $fetch = mysql_query("select * from students where studentID='$studentID'");
-		// if (@mysql_num_rows($fetch)>0)
-		// {
-		// 	$fullName = mysql_result($fetch, 0, "LastName") . ", " . mysql_result($fetch, 0, "firstName") ." ". mysql_result($fetch, 0, "otherNames");
-			
-		// 	return $fullName;
-		// }
+		
 	}
 	
 	function getSchoolFees($term, $session)

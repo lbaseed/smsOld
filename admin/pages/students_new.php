@@ -53,7 +53,6 @@
 
                         $stmt = $pdo->prepare("insert into students (studentID,lastName,firstName, otherNames, gender, dob, address, class, subClass, parentID, status, pic) values(:studentID,:lastName, :firstName,:otherNames,:gender,:dob, :address, :class, :subClass, :parentID, :status, :pic)");
                         $q = $stmt->execute([
-							
                             ':studentID'=>$sid,
                             ':lastName'=>$lname,
                             ':firstName' => $fname,

@@ -11,6 +11,7 @@
 
 	//create PDO instance
 	$pdo = new PDO($dsn, $db_user, $db_pass);
+	$pdo1 = new PDO($dsn, $db_user, $db_pass);
 	
 	
 ?>

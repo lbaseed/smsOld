@@ -37,16 +37,19 @@
                         $rows = $stmt->rowCount();
                         if($rows > 0)
                         {
-                            for ($i=1; $i < $rows ; $i++) 
+							 
+							$sn = 1;
+                            for ($i=0; $i < $rows ; $i++) 
                             { 
-                               $rec = $stmt->fetch(PDO::FETCH_OBJ);
+                              $rec = $stmt->fetch(PDO::FETCH_OBJ);
                                $sid = $rec->subjectID; $sTitle = $rec->subjectTitle; 
                                $sTeacher = $rec->subjectID;
                                $type = $rec->type; $cat = $rec->category;
-                               echo "<tr><td>$i</td><td><a href=''>$sid</a></td> <td>$sTitle</td> <td>$type</td> <td>$cat</td>
+                               echo "<tr><td>$sn</td><td><a href=''>$sid</a></td> <td>$sTitle</td> <td>$type</td> <td>$cat</td>
                                        <td>
                                        <a href=''>".getStaffName($sTeacher)."</a>
                                        </td></tr>";
+								$sn+=1;
                             }
                         }
                     ?>
