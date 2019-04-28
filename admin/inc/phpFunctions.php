@@ -211,30 +211,42 @@
 	
 	function getSchoolFeesPaid($sid, $term, $session)
 	{
+		$stmt  = $pdo->prepare(""select * from transaction where studentID='$sid' and term='$term' and session='$session');
+		$stmt->execute([':term'=> $term, ':session' => $session ]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $fees = $row->fees;
+			 return $fees;
+		}
+
+	// 	$fetch = mysql_query("select * from transaction where studentID='$sid' and term='$term' and session='$session');
 		
-		$fetch = mysql_query("select * from transaction where studentID='$sid' and term='$term' and session='$session'");
-		
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$amount = mysql_result($fetch, 0, "amountPaid");
+	// 	if (@mysql_num_rows($fetch)>0)
+	// 	{
+	// 		$amount = mysql_result($fetch, 0, "amountPaid");
 			
-			return $amount;
+	// 		return $amount;
 			
-		}else {return 0;}
+	// 	}else {return 0;}
 		
-	}
+	// }
 	
 	function getSchoolFeesBalance($sid, $term, $session)
 	{
-		
-		$fetch = mysql_query("select * from transaction where studentID='$sid' and term='$term' and session='$session'");
-		if (@mysql_num_rows($fetch)>0)
-		{
-			$amount = mysql_result($fetch, 0, "balance");
+		$stmt  = $pdo->prepare("select * from transaction where studentID='$sid' and term='$term' and session='$session'");
+		$stmt->execute([':term'=> $term, ':session' => $session ]);
+		while($row = $stmt->fetch(PDO::FETCH_OBJ)){
+			 $fees = $row->fees;
+			 return $fees;
 			
-			return $amount;
-		}else {return 0;}
-	}
+		}
+	// 	$fetch = mysql_query("select * from transaction where studentID='$sid' and term='$term' and session='$session'");
+	// 	if (@mysql_num_rows($fetch)>0)
+	// 	{
+	// 		$amount = mysql_result($fetch, 0, "balance");
+			
+	// 		return $amount;
+	// 	}else {return 0;}
+	// }
 	
 	function getSubjectRegID($stdntID, $subjectID)
 	{
@@ -360,49 +372,103 @@
 								$mclass = $split[0]; $subclass = $split[1];
 								$term = $_SESSION["term"];
 								$session = $_SESSION["session"];
+
 								
 								$studentList = array(array());
-								
-						$q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
-									if (@mysql_num_rows($q)>0)
+
+								global $pdo;
+						
+								$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subclass = :subclass");
+								$stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
+						
+								$rows = $stmt->rowCount();
+						
+								if ($rows>0)
+								{
+									for ($i=0; $i<$rows; $i++)
 									{
-										$rows = mysql_num_rows($q);
-										
-										for ($i=0; $i<$rows; $i++)
+										$row = $stmt->fetch(PDO::FETCH_OBJ); 
+						
+										$studentID = $row->studentID;
+						
+										$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :studentID AND subjectID = :subjectID AND session = :acsession");
+										$stmt->execute(['studentID' => $studentID, 'subjectID' => $subjectID, 'acsession' => $session]);
+						
+										$rows = $stmt->rowCount();
+						
+										if ($rows>0)
 										{
-											$rec = mysql_fetch_array($q);
-											$studentID = $rec["studentID"];
-											
-											$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
-											if (@mysql_num_rows($q2)>0)
-											{
-												
-												$recID = mysql_result($q2,0,"recID");
-												$tbl = strtolower("sc_".$subjectID);
-												
-												
-												$score = getSubjectScore($recID, $tbl, $term);
-													
-													//$newData = array('score'=>$score,'student'=>$studentID);
+											$row = $stmt->fetch(PDO::FETCH_OBJ);
+						
+											$recID = $row->recID;
+											$tbl = strtolower("sc_".$subjectID);
+						
+											$score = getSubjectScore($recID, $tbl, $term);
+						
+												//$newData = array('score'=>$score,'student'=>$studentID);
 													
 												$studentList[$i]['score'] = $score;
 												$studentList[$i]['student']= $studentID;
+															
+										}//check record availability in registered subjects table
 													
-											}//check record availability in registered subjects table
+									}// end of loping students table
+								
+							
+												
+						
+												
+												foreach ($studentList as $key => $row) {
+														$sscore[$key] = $row['score'];
+													}
+													
+													array_multisort($sscore, SORT_ASC, $studentList);
+						
+												return $studentList;
+
+	}
+
+
+						// $q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
+						// 			if (@mysql_num_rows($q)>0)
+						// 			{
+						// 				$rows = mysql_num_rows($q);
+										
+						// 				for ($i=0; $i<$rows; $i++)
+						// 				{
+						// 					$rec = mysql_fetch_array($q);
+						// 					$studentID = $rec["studentID"];
 											
-										}// end of loping students table
+						// 					$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
+						// 					if (@mysql_num_rows($q2)>0)
+						// 					{
+												
+						// 						$recID = mysql_result($q2,0,"recID");
+						// 						$tbl = strtolower("sc_".$subjectID);
+												
+												
+						// 						$score = getSubjectScore($recID, $tbl, $term);
+													
+						// 							//$newData = array('score'=>$score,'student'=>$studentID);
+													
+						// 						$studentList[$i]['score'] = $score;
+						// 						$studentList[$i]['student']= $studentID;
+													
+						// 					}//check record availability in registered subjects table
+											
+						// 				}// end of loping students table
 										
 
 										
-										foreach ($studentList as $key => $row) {
-												$sscore[$key] = $row['score'];
-											}
+						// 				foreach ($studentList as $key => $row) {
+						// 						$sscore[$key] = $row['score'];
+						// 					}
 											
-											array_multisort($sscore, SORT_ASC, $studentList);
+						// 					array_multisort($sscore, SORT_ASC, $studentList);
 						
-										return $studentList;
-									}
-	}
+						// 				return $studentList;
+						// 			}
+//}
 	
 	//highest in class cumulative
 	function highestSubjectScoreCumulative($subjectID, $class)
@@ -414,50 +480,102 @@
 								$session = $_SESSION["session"];
 								
 								$studentList = array(array());
-								
-						$q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
-									if (@mysql_num_rows($q)>0)
-									{
-										$rows = mysql_num_rows($q);
+
+
+								global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subclass = :subclass");
+		$stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
+		{
+			for ($i=0; $i<$rows; $i++)
+			{
+				$row = $stmt->fetch(PDO::FETCH_OBJ); 
+
+				$studentID = $row->studentID;
+
+				$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :studentID AND subjectID = :subjectID AND session = :acsession");
+				$stmt->execute(['studentID' => $studentID, 'subjectID' => $subjectID, 'acsession' => $session]);
+
+				$rows = $stmt->rowCount();
+
+				if ($rows>0)
+				{
+					$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+					$recID = $row->recID;
+					$tbl = strtolower("sc_".$subjectID);
+
+					$fTerm = getSubjectScore($recID, $tbl, "FIRST");
+					$sTerm = getSubjectScore($recID, $tbl, "SECOND");
+					$tTerm = getSubjectScore($recID, $tbl, "THIRD");
+					$score = round(($fTerm + $sTerm + $tTerm)/3,1);
+
+						//$newData = array('score'=>$score,'student'=>$studentID);
+							
+						$studentList[$i]['score'] = $score;
+						$studentList[$i]['student']= $studentID;
+									
+							}//check record availability in registered subjects table
+							
+						}// end of loping students table
+						
+
+						
+						foreach ($studentList as $key => $row) {
+								$sscore[$key] = $row['score'];
+							}
+							
+							array_multisort($sscore, SORT_DESC, $studentList);
+
+						return $studentList;
+					}
+	}	
+						// $q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
+						// 			if (@mysql_num_rows($q)>0)
+						// 			{
+						// 				$rows = mysql_num_rows($q);
 										
-										for ($i=0; $i<$rows; $i++)
-										{
-											$rec = mysql_fetch_array($q);
-											$studentID = $rec["studentID"];
+						// 				for ($i=0; $i<$rows; $i++)
+						// 				{
+						// 					$rec = mysql_fetch_array($q);
+						// 					$studentID = $rec["studentID"];
 											
-											$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
-											if (@mysql_num_rows($q2)>0)
-											{
+						// 					$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
+						// 					if (@mysql_num_rows($q2)>0)
+						// 					{
 												
-												$recID = mysql_result($q2,0,"recID");
-												$tbl = strtolower("sc_".$subjectID);
+						// 						$recID = mysql_result($q2,0,"recID");
+						// 						$tbl = strtolower("sc_".$subjectID);
 												
 												
-												$fTerm = getSubjectScore($recID, $tbl, "FIRST");
-												$sTerm = getSubjectScore($recID, $tbl, "SECOND");
-												$tTerm = getSubjectScore($recID, $tbl, "THIRD");
-												$score = round(($fTerm + $sTerm + $tTerm)/3,1);
+						// 						$fTerm = getSubjectScore($recID, $tbl, "FIRST");
+						// 						$sTerm = getSubjectScore($recID, $tbl, "SECOND");
+						// 						$tTerm = getSubjectScore($recID, $tbl, "THIRD");
+						// 						$score = round(($fTerm + $sTerm + $tTerm)/3,1);
 													
-													//$newData = array('score'=>$score,'student'=>$studentID);
+						// 							//$newData = array('score'=>$score,'student'=>$studentID);
 													
-												$studentList[$i]['score'] = $score;
-												$studentList[$i]['student']= $studentID;
+						// 						$studentList[$i]['score'] = $score;
+						// 						$studentList[$i]['student']= $studentID;
 													
-											}//check record availability in registered subjects table
+						// 					}//check record availability in registered subjects table
 											
-										}// end of loping students table
+						// 				}// end of loping students table
 										
 
 										
-										foreach ($studentList as $key => $row) {
-												$sscore[$key] = $row['score'];
-											}
+						// 				foreach ($studentList as $key => $row) {
+						// 						$sscore[$key] = $row['score'];
+						// 					}
 											
-											array_multisort($sscore, SORT_DESC, $studentList);
+						// 					array_multisort($sscore, SORT_DESC, $studentList);
 						
-										return $studentList;
-									}
-	}
+						// 				return $studentList;
+						// 			}
 	
 	//lowest in class cumulative
 	function lowestSubjectScoreCumulative($subjectID, $class)
@@ -469,47 +587,99 @@
 								$session = $_SESSION["session"];
 								
 								$studentList = array(array());
-								
-						$q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
-									if (@mysql_num_rows($q)>0)
-									{
-										$rows = mysql_num_rows($q);
+
+								global $pdo;
+
+		$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subclass = :subclass");
+		$stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
+
+		$rows = $stmt->rowCount();
+
+		if ($rows>0)
+		{
+			for ($i=0; $i<$rows; $i++)
+			{
+				$row = $stmt->fetch(PDO::FETCH_OBJ); 
+
+				$studentID = $row->studentID;
+
+				$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :studentID AND subjectID = :subjectID AND session = :acsession");
+				$stmt->execute(['studentID' => $studentID, 'subjectID' => $subjectID, 'acsession' => $session]);
+
+				$rows = $stmt->rowCount();
+
+				if ($rows>0)
+				{
+					$row = $stmt->fetch(PDO::FETCH_OBJ);
+
+					$recID = $row->recID;
+					$tbl = strtolower("sc_".$subjectID);
+
+					$fTerm = getSubjectScore($recID, $tbl, "FIRST");
+					$sTerm = getSubjectScore($recID, $tbl, "SECOND");
+					$tTerm = getSubjectScore($recID, $tbl, "THIRD");
+					$score = round(($fTerm + $sTerm + $tTerm)/3,1);
+
+						//$newData = array('score'=>$score,'student'=>$studentID);
+							
+						$studentList[$i]['score'] = $score;
+						$studentList[$i]['student']= $studentID;
+									
+							}//check record availability in registered subjects table
+							
+						}// end of loping students table
+						
+
+						
+						foreach ($studentList as $key => $row) {
+								$sscore[$key] = $row['score'];
+							}
+							
+							array_multisort($sscore, SORT_ASC, $studentList);
+
+						return $studentList;
+					}
+	}							
+	// 					$q = mysql_query("select * from students where class='$mclass' and subclass='$subclass'") or die (mysql_error());
+	// 								if (@mysql_num_rows($q)>0)
+	// 								{
+	// 									$rows = mysql_num_rows($q);
 										
-										for ($i=0; $i<$rows; $i++)
-										{
-											$rec = mysql_fetch_array($q);
-											$studentID = $rec["studentID"];
+	// 									for ($i=0; $i<$rows; $i++)
+	// 									{
+	// 										$rec = mysql_fetch_array($q);
+	// 										$studentID = $rec["studentID"];
 											
-											$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
-											if (@mysql_num_rows($q2)>0)
-											{
+	// 										$q2 = mysql_query("select * from reg_subjects where studentID='$studentID' and subjectID='$subjectID' and session='$session'");
+	// 										if (@mysql_num_rows($q2)>0)
+	// 										{
 												
-												$recID = mysql_result($q2,0,"recID");
-												$tbl = strtolower("sc_".$subjectID);
+	// 											$recID = mysql_result($q2,0,"recID");
+	// 											$tbl = strtolower("sc_".$subjectID);
 												
-												$fTerm = getSubjectScore($recID, $tbl, "FIRST");
-												$sTerm = getSubjectScore($recID, $tbl, "SECOND");
-												$tTerm = getSubjectScore($recID, $tbl, "THIRD");
-												$score = round(($fTerm + $sTerm + $tTerm)/3,1);
+	// 											$fTerm = getSubjectScore($recID, $tbl, "FIRST");
+	// 											$sTerm = getSubjectScore($recID, $tbl, "SECOND");
+	// 											$tTerm = getSubjectScore($recID, $tbl, "THIRD");
+	// 											$score = round(($fTerm + $sTerm + $tTerm)/3,1);
 													
-												$studentList[$i]['score'] = $score;
-												$studentList[$i]['student']= $studentID;
+	// 											$studentList[$i]['score'] = $score;
+	// 											$studentList[$i]['student']= $studentID;
 													
-											}//check record availability in registered subjects table
+	// 										}//check record availability in registered subjects table
 											
-										}// end of loping students table
+	// 									}// end of loping students table
 										
 
 										
-										foreach ($studentList as $key => $row) {
-												$sscore[$key] = $row['score'];
-											}
+	// 									foreach ($studentList as $key => $row) {
+	// 											$sscore[$key] = $row['score'];
+	// 										}
 											
-											array_multisort($sscore, SORT_ASC, $studentList);
+	// 										array_multisort($sscore, SORT_ASC, $studentList);
 						
-										return $studentList;
-									}
-	}
+	// 									return $studentList;
+	// 								}
+	// }
 	
 	function getSchAttr($col)
 	{
