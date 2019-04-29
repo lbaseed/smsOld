@@ -1,5 +1,9 @@
 <?php include "../inc/html_controls.php";?>
-
+<?php
+										$_SESSION["smuser"] = 'SP/1001';
+										$_SESSION["clrs"] = "ADMIN";
+										//$_SESSION["pic"] = $pic;
+?>
 
 
 <?php initializePage(); ?>
@@ -41,7 +45,7 @@
 							if ($a==43) {assignClassTeacher();}
 							if ($a==44) {updateClass();}
 							
-							//fifth dropdown  [manage subjects]
+							//fifth dropdown  [manage subjects]@Kole todo
 							if ($a==51) {createSubject();}
 							if ($a==52) {allSubjects();}
 							if ($a==53) {assignSubjectTeacher();}

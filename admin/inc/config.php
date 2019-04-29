@@ -1,5 +1,5 @@
 <?php
-	//error_reporting(0);
+	error_reporting(0);
 	$db_host = "localhost";
 	$db_user = "root";
 	$db_pass = "";
@@ -11,6 +11,7 @@
 
 	//create PDO instance
 	$pdo = new PDO($dsn, $db_user, $db_pass);
+	$pdo1 = new PDO($dsn, $db_user, $db_pass);
 	
 	
 ?>

@@ -20,6 +20,7 @@
 					<?php
 						if (isset($_GET["subID"]))
 						{
+							
 					if ($_GET["subID"]=="1")
 						
 							
@@ -27,36 +28,46 @@
 						 
 						 	if(isset($_POST["go"]) == "Register Subjects"){
 
-								$term = $_SESSION["term"];
-								$session = $_SESSION["session"];
+								$term = "SECOND";
+								$session = "2018/2019";
 								$numrows = $_POST["numrows"];
 								$split = explode("_",$_POST["class"]);
 								$class = $split[0]; $subclass = $split[1];
 
-								$stmt = $pdo->prepare("select * from students where class=:class and subclass =:subclass");
-								$q = $stmt->execute(['class'=>$class, 'subclass'=>$subclass]);
-								$recID = time();
-								$flag2 = "";
-								if($stmt->rowCount() > 0){
-									for ($j=0; $j < $q->rowCount(); $j++){
-										$row = $q->fetchAll(PDO::FETCH_OBJ);
+								//get number of students in a class
+								$stmt1 = $pdo->prepare("select studentID from students where class=:class and subClass =:subclass");
+								$q = $stmt1->execute(['class'=>$class, 'subclass'=>$subclass]);
+								$num_of_students = $stmt1->rowCount();
+								
+								$flag="";
+								$flag2 = 0;
+								
+								if($num_of_students > 0){
+									
+									//loop through all the students
+									foreach ($stmt1->fetchAll(PDO::FETCH_OBJ) as $row){
+										
+										
 										$studentID = $row->studentID;
 
-										for ($i=1; $i < $numrows; $i++) { 
-											$recID3 = time() + rand(00,324);
+										for ($i=0; $i< $numrows; $i++) { 
+											$recID3 = time() + rand(0,999) + rand(55,111);
 											$subjectID= $_POST["sb_$i"]; 
 
 											if($subjectID){
 												//check for already registered subject
-												$stmt = $pdo->prepare("select * from reg_subjects where studentID=:studentID and subjectID=:subjectID and session=:session");
-												$chk = $stmt->execute([
+												$stmt2 = $pdo->prepare("select * from reg_subjects where studentID=:studentID and subjectID=:subjectID and session=:session");
+												$chk = $stmt2->execute([
 													'studentID'=>$studentID,
 													'subjectID'=>$subjectID,
 													'session' => $session
-												]);
-												if($chk->rowCount() > 0){$flag="ignored";}
+													]);
+												
+												if($stmt2->rowCount() > 0){$flag="ignored";}
+												
 												else{
-													$stmt = $pdo->prepare("insert into reg_subjects values(:recID,:studentID,:subjectID,:session,'')");
+													$recID = time() + rand(0,999) + rand(03,777);
+													$stmt = $pdo->prepare("insert into reg_subjects (recID, studentID,subjectID,session,remark)values(:recID,:studentID,:subjectID,:session,:remark)");
 													$q2 = $stmt->execute(['recID'=>$recID,
 													'studentID'=> $studentID,
 													'subjectID'=>$subjectID,
@@ -65,8 +76,8 @@
 													]);
 
 													$tbl = "sc_".$subjectID;
-													$stmt = $pdo->prepare("insert into $tbl values(:recID,:ref, :studentID,:ca1,:ca2,:ca3,:ca4,:exam,:total,:term,:session)");
-													$q31 = $stmt->execute([
+													$stmt4 = $pdo->prepare("insert into $tbl (recID, ref, studentID,ca1,ca2,ca3,ca4,exam,total,term,session) values(:recID,:ref, :studentID,:ca1,:ca2,:ca3,:ca4,:exam,:total,:term,:session)");
+													$q31 = $stmt4->execute([
 														'recID'=>$recID3,
 														'ref'=>$recID,
 														'studentID'=>$studentID,
@@ -79,8 +90,8 @@
 														'term' => 'FIRST',
 														'session'=> $session
 														]);
-													$recID3+= rand(0,99592);
-													$q32 = $stmt->execute([
+													$recID3 += 6 + rand (0,99);
+													$q32 = $stmt4->execute([
 														'recID'=>$recID3,
 														'ref'=>$recID,
 														'studentID'=>$studentID,
@@ -90,11 +101,11 @@
 														'ca4' => '',
 														'exam' => '',
 														'total' => '',
-														'' => 'SECOND',
+														'term' => 'SECOND',
 														'session'=> $session
 														]);
-													$recID3+= rand(0,99592);
-													$q33 = $stmt->execute([
+													$recID3+= 9 + rand(99, 199);
+													$q33 = $stmt4->execute([
 														'recID'=>$recID3,
 														'ref'=>$recID,
 														'studentID'=>$studentID,
@@ -104,21 +115,27 @@
 														'ca4' => '',
 														'exam' => '',
 														'total' => '',
-														'' => 'THIRD',
+														'term' => 'THIRD',
 														'session'=> $session
 														]);
-													$recID3+= rand(0,99592);
+													
 
 													if ($q2 and $q31 and $q32 and $q33) {$flag2+=1;}
 
 												}
-											}if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject Ignored</div>"; $flag="";}
-											if ($flag2!="") {echo "<div class='alert alert-success'>Operation Success</div>"; $flag2="";}
-											else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
+											}
 										}
+										//looping through selected subjects;
+										if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject Ignored</div>"; $flag="";}
 
+								
 									}
-								} else {echo "<div class='alert alert-info'>Currently no students in $class $subclass</div>";}
+									//end of looping through students
+											if ($flag2!=0) {echo "<div class='alert alert-success'>Operation Success</div>"; $flag2="";}
+											else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
+									
+									
+								} else {echo "<div class='alert alert-info'>Currently no students in $class _ $subclass</div>";}
 								
 								
 							}//end of on post checking
@@ -145,20 +162,6 @@
 
 									}
 					
-									// $q = @mysql_query("select * from classes order by `classid` ASC");
-									
-									// if (@mysql_num_rows($q)>0)
-									// {	
-									// 	$rows = @mysql_num_rows($q);
-										
-									// 	for ($i=1; $i<=$rows; $i++)
-									// 	{
-									// 		$rec = @mysql_fetch_array($q);
-									// 		$cid = $rec["classid"];
-											
-									// 		echo "<option value='$cid'>$cid</option>";
-									// 	}
-									// }
                     			?>
                             
                             </select>
@@ -172,29 +175,15 @@
 						 		$stmt -> execute(['type'=>"CORE"]);
 						 		$rows = $stmt -> rowCount();
 								if($stmt->rowCount() > 0){
-									$i=1;
+									$i=0;
 									while($row = $stmt->fetch(PDO::FETCH_OBJ)){
 										$sid = $row->subjectID; $sTitle = $row->subjectTitle;
-										echo "<label>$sTitle : </label> <input type='checkbox' name='sb_$i' value='$sid' /> &nbsp &nbsp ";
+										echo "<label>$sTitle :  <input type='checkbox' name='sb_$i' value='$sid' /></label> &nbsp &nbsp ";
 										$i++;
 									}
 									echo "<input type='hidden' name='numrows' value='$rows' />";
 								}
-                            	// $q = mysql_query("select * from subjects where type='CORE' order by `subjectID` ASC");
-								// if (@mysql_num_rows($q)>0)
-								// {
-								// 	$rows = mysql_num_rows($q);
-								// 	for ($i=1; $i<=$rows; $i++)
-								// 	{
-								// 		$rec= mysql_fetch_array($q);
-								// 		$sid = $rec["subjectID"]; $sTitle= $rec["subjectTitle"];
-										
-								// 		echo "<label>$sTitle : </label> <input type='checkbox' name='sb_$i' value='$sid' /> &nbsp &nbsp ";
-								// 	}
-									
-								// 	echo "<input type='hidden' name='numrows' value='$rows' />";
-                                // }
-                                
+                            	
 
 							?>
                         </div>
@@ -253,8 +242,8 @@
 						if (isset($_POST["reg"])){
 							
 							$num = $_POST["rows"];
-							$term = $_SESSION["term"];
-							$session = $_SESSION["session"];
+							$term = "SECOND";
+							$session = "2018/2019";
 							$recID1 = time();
 							$recID2 = time() + 20;
 							$oSubject = $_POST["oSubjects"];

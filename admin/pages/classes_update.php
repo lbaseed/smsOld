@@ -39,7 +39,7 @@
                         
                         <br>
                         <div class="input-group pull-right col-lg-4">
-                            <input type="submit" class="btn btn-info" value="Create" name="go" />
+                            <input type="submit" class="btn btn-info" value="Update" name="go" />
                         </div>
                          	
                     </form>
