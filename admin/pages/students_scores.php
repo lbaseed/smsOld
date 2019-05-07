@@ -65,7 +65,7 @@
 			
 		?>
 		<div class="input-group pull-right">
-                            <a href="<?php $cl=$_GET["stdntClass"]; echo "forms/classBroadSheet.php?stdntClass=$cl";?>" target="_blank">
+                            <a href="<?php $cl=$_GET["stdntClass"]; echo "../forms/classBroadSheet.php?stdntClass=$cl";?>" target="_blank">
                             <button class="btn btn-primary">Export PDF</button></a>
                         </div>
 			

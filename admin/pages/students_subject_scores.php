@@ -90,7 +90,7 @@
 								$actvTbl = strtolower("sc_".$_POST["tbl"]);
 								$recRows = $_POST["rows"];
 								$total = 0;
-								for ($k=1; $k<=$recRows; $k++)
+								for ($k=0; $k<$recRows; $k++)
 								{
 									$arecID = $_POST["rec_$k"];
 									
@@ -123,72 +123,73 @@
 								$mclass = $split[0];
 								$subclass = $split[1];
 								//$term = $_SESSION["term"];
-								$term = 'first';
+								$term = 'SECOND';
 								//$session = $_SESSION["session"];
 								$session = '2018/2019';
 								if ($subjectID and $_GET["class"])
 								{
-									$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subclass = :subclass ");
-									$stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
+									$stmt = $pdo->prepare("SELECT * FROM students WHERE class = :mclass AND subClass = :subclass ");
+									$q = $stmt->execute(['mclass' => $mclass, 'subclass' => $subclass]);
 
-									$rows = $stmt->rowCount();
+									
+									$stdnt_rows = $stmt->rowCount();
 
-									if ($rows>0)
+									if ($stdnt_rows>0)
 									{
-							
-										for ($i=1; $i<=$rows; $i++)
+							$sn = 1;
+										foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $stdnt_rec=>$value)
 										{
-											$row = $stmt->fetch(PDO::FETCH_OBJ);
-											$studentID = $row->studentID;
-
-											$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :studentID AND subjectID = :subjectID AND session = :session ");
-											$stmt->execute(['studentID' => $studentID, 'subjectID' => $subjectID, 'session' => $session]);
-
-											$rows = $stmt->rowCount();
 											
-											if ($rows > 0)
+											
+											$studentID = $value->studentID;
+
+											$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID =? AND subjectID =? AND session =?");
+											$stmt->execute([$studentID,$subjectID,$session]);
+
+											$subject_rows = $stmt->rowCount();
+											
+											if ($subject_rows > 0)
 											{
 												
-												$row = $stmt->fetch(PDO::FETCH_OBJ);
+												
+												$subject_rec = $stmt->fetch(PDO::FETCH_OBJ);
 
-												$recID = $row->recID;
+												$recID = $subject_rec->recID;
 												$tbl = "sc_".$subjectID;
 
-												$stmt = $pdo->prepare("SELECT * FROM $tbl WHERE ref = :recID AND term = :term ");
-												$stmt->execute(['recID' => $recID, 'term' => $term]);
+												$stmt = $pdo->prepare("SELECT * FROM $tbl WHERE ref =? AND term =? AND session=? ");
+												$stmt->execute([$recID,$term,$session]);
 
-												$rows = $stmt->rowCount();
 
-												if ($rows > 0)
+												if ($stmt->rowCount() > 0)
 												{
-													$row = $stmt->fetch(PDO::FETCH_OBJ);
-													$sid = $row->studentID;
-													$scoreRec = $row->recID;
+													$scores_rec = $stmt->fetch(PDO::FETCH_OBJ);
+													$sid = $scores_rec->studentID;
+													$scoreRec = $scores_rec->recID;
 													
-													$ca1 = $row->ca1; 
-													$ca2 = $row->ca2; 
-													$ca3 = $row->ca3;  
-													$ca4 = $row->ca4;
-													$exam = $row->exam; 
-													$total = $row->total;
+													$ca1 = $scores_rec->ca1; 
+													$ca2 = $scores_rec->ca2; 
+													$ca3 = $scores_rec->ca3;  
+													$ca4 = $scores_rec->ca4;
+													$exam = $scores_rec->exam; 
+													$total = $scores_rec->total;
 
-												echo "<tr> <td>$i</td> 
-											<td><input type='hidden' name='rec_$i' value='$scoreRec'>$sid</td> 
-											<td><input type='text' name='ca1_$i' class='form-control' style='width:50px;' value='$ca1' /></td> 
-											<td><input type='text' name='ca2_$i' class='form-control' style='width:50px;' value='$ca2' /></td> 
-											<td><input type='text' name='ca3_$i' class='form-control' style='width:50px;' value='$ca3' /></td>
-											<td><input type='text' name='ca4_$i' class='form-control' style='width:50px;' value='$ca4' /></td> 
-											<td><input type='text' name='exam_$i' class='form-control' style='width:50px;' value='$exam' /></td> 
-											<td><input type='text' name='total_$i' disabled class='form-control' style='width:50px;' value='$total' /></td>
+												echo "<tr> <td>$sn</td> 
+											<td><input type='hidden' name='rec_$stdnt_rec' value='$scoreRec'>$sid</td> 
+											<td><input type='text' name='ca1_$stdnt_rec' class='form-control' style='width:50px;' value='$ca1' /></td> 
+											<td><input type='text' name='ca2_$stdnt_rec' class='form-control' style='width:50px;' value='$ca2' /></td> 
+											<td><input type='text' name='ca3_$stdnt_rec' class='form-control' style='width:50px;' value='$ca3' /></td>
+											<td><input type='text' name='ca4_$stdnt_rec' class='form-control' style='width:50px;' value='$ca4' /></td> 
+											<td><input type='text' name='exam_$stdnt_rec' class='form-control' style='width:50px;' value='$exam' /></td> 
+											<td><input type='text' name='total_$stdnt_rec' disabled class='form-control' style='width:50px;' value='$total' /></td>
 												</tr>";	
 												}
 												
 											}//check record availability in registered subjects table
-											
+											$sn+=1;
 										}// end of loping students table
 									}
-									else { //use header redirection for appropriate location of error msg 
-									}
+									
 								}
 							}
 						?>
@@ -197,7 +198,7 @@
                     <br>
                         <div class="input-group pull-right col-lg-4">
                         <input type="hidden" name="tbl" value="<?php echo $subjectID?>" />
-                        <input type="hidden" name="rows" value="<?php echo $rows?>" />
+                        <input type="hidden" name="rows" value="<?php echo $stdnt_rows?>" />
                             <input type="submit" class="btn btn-success" value="Save" name="save" />
                         </div>
                 	</form>

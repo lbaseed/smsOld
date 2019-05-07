@@ -39,11 +39,11 @@
     <p class="login-box-msg">Sign in to start your session</p>
 				
                 <?php 
-	/*
+	
                 		if (isset($_POST["go"])=="signIn")
 						{
-							$uid = mysql_real_escape_string(filter_var(strtoupper($_POST["uid"]), FILTER_SANITIZE_STRING));
-							$upass = mysql_real_escape_string(filter_var($_POST["upass"], FILTER_SANITIZE_STRING));
+							$uid = filter_var(strtoupper($_POST["uid"]), FILTER_SANITIZE_STRING);
+							$upass = filter_var($_POST["upass"], FILTER_SANITIZE_STRING);
 							
 							if ($uid and $upass)
 							{
@@ -74,7 +74,7 @@
 								}else {echo "<div class='alert alert-danger'>Wrong User ID</div>";}
 							}else {echo "<div class='alert alert-danger'>Fill all fields</div>";}
 						}
-		 */
+		 
 				?>
     <form action="" method="post">
 		

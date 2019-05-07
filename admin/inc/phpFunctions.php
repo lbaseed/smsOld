@@ -148,7 +148,7 @@
 		if($rows > 0)
 		{
 			$row = $stmt->fetch(PDO::FETCH_OBJ);
-			$fullName = $row->LastName.', '.$row->firstName.' '.$row->otherNames;
+			$fullName = $row->lastName.', '.$row->firstName.' '.$row->otherNames;
 			return $fullName;
 		}
 	}

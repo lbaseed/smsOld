@@ -68,18 +68,7 @@
                     <select class="form-control" name="sTeacher">
                     <option value="">Select Subject Teacher</option>
                     <?php
-                            // $q = mysql_query("select * from staff order by `staffID` ASC");
-                            // $rows = mysql_num_rows($q);
-                            // if ($rows>0)
-                            // {
-                            //     for ($i=1; $i<=$rows; $i++)
-                            //     {
-                            //         $rec = mysql_fetch_array($q);
-                            //         $sid = $rec["staffID"]; $fullName = $rec["lastName"] .", ". $rec["firstName"] ." ". $rec["othernames"];
-                                    
-                            //         echo "<option value='$sid'>$fullName : $sid</option>";
-                            //     }
-                            // }
+                            
 
                         
                         $sql = "select * from staff order by `staffID` ASC";
@@ -88,10 +77,11 @@
                         $rows = $stmt->rowCount();
                         if($rows > 0)
                         {
-                            for ($i=1; $i < $rows; $i++) { 
+                            for ($i=0; $i < $rows; $i++) { 
                                 $rec = $stmt->fetch(PDO::FETCH_OBJ);
                                 $sid = $rec->staffID; $fullName = $rec->lastName.', '.$rec->firstName.' '.$rec->othernames;
                                 echo "<option value='$sid'>$fullName : $sid</option>";
+								
                             }
                         }
                         
@@ -105,18 +95,6 @@
                     <option value="">Select Subject</option>
                     <?php
                         
-                            // $q = mysql_query("select * from subjects order by `subjectID` ASC");
-                            // $rows = mysql_num_rows($q);
-                            // if ($rows>0)
-                            // {
-                            //     for ($i=1; $i<=$rows; $i++)
-                            //     {
-                            //         $rec = mysql_fetch_array($q);
-                            //         $sid = $rec["subjectID"]; $sTitle = $rec["subjectTitle"];
-                                    
-                            //         echo "<option value='$sid'>$sTitle</option>";
-                            //     }
-                            // }
                             
                             $sql = "select * from subjects order by `subjectID` ASC";
                             $stmt = $pdo->prepare($sql);
@@ -124,9 +102,12 @@
                             $rows = $stmt->rowCount();
                             if($rows > 0)
                             {
+								for ($i=0; $i < $rows; $i++) 
+                                { 
                                 $rec = $stmt->fetch(PDO::FETCH_OBJ);
                                 $sid = $rec->subjectID; $sTitle = $rec->subjectTitle;
                                 echo "<option value='$sid'>$sTitle</option>";
+								}
                             }
                             
                     
@@ -141,20 +122,6 @@
                     <?php
                         
                         
-                            // $q = mysql_query("select * from classes order by `classID` ASC");
-                            // $rows = mysql_num_rows($q);
-                            // if ($rows>0)
-                            // {
-                            //     for ($i=1; $i<=$rows; $i++)
-                            //     {
-                            //         $rec = mysql_fetch_array($q);
-                            //         $sid = $rec["classid"]; 
-                                    
-                            //         echo "<option value='$sid'>$sid</option>";
-                            //     }
-                            // }
-
-                            
                             $sql = "select * from classes order by `classID` ASC";
                             $stmt = $pdo->prepare($sql);
                             $stmt->execute();
@@ -182,21 +149,7 @@
             <tr> <th>#</th> <th>Staff ID</th> <th>Staff Name</th> <th>Subject</th> <th>Class</th> </tr>
             <?php
                 
-                // $fq = mysql_query("select * from subject_allocation order by `staffID` ASC");
                 
-                // if (@mysql_num_rows($fq)>0)
-                // {
-                //     for ($i=1; $i<=@mysql_num_rows($fq); $i++)
-                //     {
-                //         $frec = mysql_fetch_array($fq);
-                        
-                //         $fStaffID = $frec["staffID"]; $fSid = $frec["subjectID"]; $fClassID = $frec["classID"];
-                //         $staffName = getStaffName($fStaffID); $subjectName = getSubjectName($fSid);
-                        
-                //         echo "<tr> <td>$i</td> <td>$fStaffID</td> <td>$staffName</td> <td>$subjectName</td> <td>$fClassID</td> </tr>";
-                //     }
-                // }
-
                 
                 $sql = "select * from subject_allocation order by `staffID` ASC";
                 $stmt = $pdo->prepare($sql);
@@ -204,13 +157,16 @@
                 $rows = $stmt->rowCount();
                 if($rows > 0)
                 {
-                    for ($i=1; $i < $rows; $i++) 
+					$sn=1;
+                    for ($i=0; $i < $rows; $i++) 
                     { 
                         $frec = $stmt->fetch(PDO::FETCH_OBJ);
                         $fStaffID = $frec->staffID; $fSid = $frec->subjectID; $fClassID = $frec->classID;
                         $staffName = getStaffName($fStaffID); $subjectName = getSubjectName($fSid);
-                        echo "<tr> <td>$i</td> <td>$fStaffID</td> <td>$staffName</td> <td>$subjectName</td> <td>$fClassID</td> </tr>";   
-                    }
+                        echo "<tr> <td>$sn</td> <td>$fStaffID</td> <td>$staffName</td> <td>$subjectName</td> <td>$fClassID</td> </tr>";   
+                $sn+=1;
+					}
+					
                 }
             
             ?>

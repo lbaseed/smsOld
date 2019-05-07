@@ -245,141 +245,86 @@
 							$term = "SECOND";
 							$session = "2018/2019";
 							$recID1 = time();
-							$recID2 = time() + 20;
+							$recID2 = time() + rand(0,555);
 							$oSubject = $_POST["oSubjects"];
 							$tbl1 = strtolower("sc_".$oSubject);
-							$flag1 = "";
-
-							$recID3 = time() + rand(000, 9999);
-							for($i=1; $i<=$num; $i++){
+							$flag="";
+							$flag1 = 0;
+							
+							
+							
+							for($i=1; $i<$num; $i++){
 								$InsertStdntID = $_POST["sdt_$i"];
-								if($InsertStdntID and $oSubject!=""){
-									$sql = 'select * from reg_subject where studentID = :studentID and  subjectID = :subjectID and session = :session';
+								
+								if($InsertStdntID!="" and $oSubject!=""){
+									
+									$sql = "select * from reg_subject where studentID =? and  subjectID=? and session=?";
 									$stmt = $pdo->prepare($sql);
-									$stmt->execute([
-										'studentID'=> $InsertStdntID,
-										'subjectID'=> $oSubject,
-										'session'=> $session
-									]);
+									$stmt->execute([$InsertStdntID, $oSubject, $session]);
 
 									if($stmt->rowCount() > 0){
 										$flag="ignored";
 									}else{
-										$stmt = $pdo->prepare('insert into reg_subjects values(:recID, :studentID, :subjectID, :session, :remark)');
-										$q = $stmt->execute(['recID'=>$recID1,
-											'studentID'=>$InsertStdntID,
-											'subjectID'=>$oSubject,
-											'session'=>$session,
-											'remark'=>''										
-										]);
-										$stmt = $pdo->prepare("insert into $tbl1 values(:recID,:ref, :studentID,:ca1,:ca2,:ca3,:ca4,:exam,:total,:term,:session)");
-										$q31 = $stmt->execute([
-											'recID'=>$recID3,
-											'ref'=>$recID,
-											'studentID'=>$studentID,
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => 'FIRST',
-											'session'=> $session
-											]);
-										$stmt = $pdo->prepare("insert into $tbl1 values(:recID,:ref, :studentID,:ca1,:ca2,:ca3,:ca4,:exam,:total,:term,:session)");
-										$q32 = $stmt->execute([
-											'recID'=>$recID3,
-											'ref'=>$recID,
-											'studentID'=>$studentID,
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => '',
-											'' => 'SECOND',
-											'session'=> $session
-											]);
-											$recID3+= rand(0,99792);
-											$stmt = $pdo->prepare("insert into $tbl1 values(:recID,:ref, :studentID,:ca1,:ca2,:ca3,:ca4,:exam,:total,:term,:session)");
-											$q33 = $stmt->execute([
-												'recID'=>$recID3,
-												'ref'=>$recID,
-												'studentID'=>$studentID,
-												'' => '',
-												'' => '',
-												'' => '',
-												'' => '',
-												'' => '',
-												'' => '',
-												'' => 'SECOND',
-												'session'=> $session
-												]);
-												$recID3+= rand(0,99792);
+										$recID3 = time() + rand(000, 9999);
+										
+										$stmt = $pdo->prepare("insert into reg_subjects (recID, studentID,subjectID,session,remark) values(?, ?, ?,?,?)");
+										$q = $stmt->execute([$recID1,$InsertStdntID, $oSubject,$session,""]);
+											
+										$stmt4 = $pdo->prepare("insert into $tbl1 (recID, ref, studentID,ca1,ca2,ca3,ca4,exam,total,term,session) values(:recID,:ref, :studentID,:ca1,:ca2,:ca3,:ca4,:exam,:total,:term,:session)");
+													$q31 = $stmt4->execute([
+														'recID'=>$recID3,
+														'ref'=>$recID1,
+														'studentID'=>$InsertStdntID,
+														'ca1' => '',
+														'ca2' => '',
+														'ca3' => '',
+														'ca4' => '',
+														'exam' => '',
+														'total' => '',
+														'term' => 'FIRST',
+														'session'=> $session
+														]);
+													$recID3 += 6 + rand (0,99);
+													$q32 = $stmt4->execute([
+														'recID'=>$recID3,
+														'ref'=>$recID1,
+														'studentID'=>$InsertStdntID,
+														'ca1' => '',
+														'ca2' => '',
+														'ca3' => '',
+														'ca4' => '',
+														'exam' => '',
+														'total' => '',
+														'term' => 'SECOND',
+														'session'=> $session
+														]);
+													$recID3+= 9 + rand(99, 999);
+													$q33 = $stmt4->execute([
+														'recID'=>$recID3,
+														'ref'=>$recID1,
+														'studentID'=>$InsertStdntID,
+														'ca1' => '',
+														'ca2' => '',
+														'ca3' => '',
+														'ca4' => '',
+														'exam' => '',
+														'total' => '',
+														'term' => 'THIRD',
+														'session'=> $session
+														]);
 									}
 									$recID1 += 23;
 									if ($q and $q31 and $q32 and $q33){ $flag1 += $i;}
 								}
-								if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject for a student Ignored</div>"; }
+								
+							}//end of looping through subjects
+							
+							if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject for a student Ignored</div>"; }
 								if ($flag1!="") {echo "<div class='alert alert-success'>Operation Success</div>";}
 								
 								else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
-							}
 
-						 //optional subjects registration
-		 				
-						// if ($_POST["reg"]=="Register Students")
-						// {
-						// 	$num = $_POST["rows"];
-						// 	$term = $_SESSION["term"];
-						// 	$session = $_SESSION["session"];
-						// 	$recID1 = time();
-						// 	$recID2 = time() + 20;
-						// 	$oSubject = $_POST["oSubjects"];
-						// 	$tbl1 = strtolower("sc_".$oSubject);
-						// 	$flag1 = "";
-							
-						// 	$recID3 = time() + rand(000, 9999);
-							
-						// 	for ($i=1; $i<=$num; $i++)
-						// 	{
-						// 		$InsertStdntID = $_POST["sdt_$i"];
-								
-						// 		if ($InsertStdntID and $oSubject!="")
-						// 		{
-						// 			$chck = mysql_query("select * from reg_subjects where studentID='$InsertStdntID' and subjectID='$oSubject' and session='$session' ") or die (mysql_error());
-						// 							if (@mysql_num_rows($chck)>0) {$flag="ignored";}
-						// 							else
-						// 							{
-														
-						// 			$q = mysql_query("insert into reg_subjects values('$recID1','$InsertStdntID','$oSubject','$session','')");
-													
-						// 			$q31 = mysql_query("insert into $tbl1 values('$recID3','$recID1','$InsertStdntID','','','','','','',
-						// 						'FIRST','$session')");
-						// 						$recID3+= rand(0,99592);
-						// 						$q32 = mysql_query("insert into $tbl1 values('$recID3','$recID1','$InsertStdntID','','','','','','',
-						// 						'SECOND','$session')");
-						// 						$recID3+= rand(0,99792);
-						// 						$q33 = mysql_query("insert into $tbl1 values('$recID3','$recID1','$InsertStdntID','','','','','','',
-						// 						'THIRD','$session')");
-						// 						$recID3+= rand(0,99792);
-												
-									
-						// 							}
-									
-						// 			$recID1 += 23;
-						// 			if ($q and $q31 and $q32 and $q33){ $flag1 += $i;}
-						// 		}
-						// 	}
-							
-									
-						// 			if ($flag=="ignored") {echo "<div class='alert alert-info'>Duplicate Subject for a student Ignored</div>"; }
-						// 			if ($flag1!="") {echo "<div class='alert alert-success'>Operation Success</div>";}
-						// 			else {echo "<div class='alert alert-danger'>Operation Failed</div>";}
-							
-							
-						// }
-		 					
+						 
 						}
 					  ?>
                       <form action="" method="post">
@@ -439,56 +384,7 @@
 									}$i++;
 								}
 
-								// $sp2 = substr($_POST["class"],0,1);
-								// if ($sp2=="S")
-								// {
-                            	// $q = mysql_query("select * from subjects where category='POSTBASIC' and type='OPTIONAL' and status='ACTIVE' order by `subjectID` ASC");
-								// 		if (@mysql_num_rows($q)>0)
-								// 		{
-											
-								// 			for ($i=1; $i<=@mysql_num_rows($q); $i++)
-								// 			{
-								// 				$rec= mysql_fetch_array($q);
-								// 				$sid = $rec["subjectID"]; $sTitle= $rec["subjectTitle"];
-												
-								// 				echo "<option value='$sid'>$sTitle</option> ";
-								// 			}
-											
-											
-								// 		}
-								// }
-								// else if ($sp2=="J" or $sp2=="P")
-								// {
-                            	// $q = mysql_query("select * from subjects where category='BASIC' and  type='OPTIONAL' and status='ACTIVE' order by `subjectID` ASC");
-								// 		if (@mysql_num_rows($q)>0)
-								// 		{
-								// 			$rows = mysql_num_rows($q);
-								// 			for ($i=1; $i<=$rows; $i++)
-								// 			{
-								// 				$rec= mysql_fetch_array($q);
-								// 				$sid = $rec["subjectID"]; $sTitle= $rec["subjectTitle"];
-												
-								// 				echo "<option value='$sid'>$sTitle</option> ";
-								// 			}
-											
-								// 		}
-								// }
-								
-								
-                            	// $qAll = mysql_query("select * from subjects where category='BOTH' and type='OPTIONAL' and status='ACTIVE' order by `subjectID` ASC");
-								// if (@mysql_num_rows($qAll)>0)
-								// {
-									
-								// 	for ($i=1; $i<=mysql_num_rows($qAll); $i++)
-								// 	{
-								// 		$rec= mysql_fetch_array($qAll);
-								// 		$sid = $rec["subjectID"]; $sTitle= $rec["subjectTitle"];
-										
-								// 		echo "<option value='$sid'>$sTitle</option> ";
-								// 	}
-									
-									
-								// }
+
 							?>
                             </select>
                             </div>
@@ -512,6 +408,7 @@
 													'subClass'=>$split[1]
 												]);
 
+												$stdnt_num = $stmt->rowCount();
 												if($stmt->rowCount() > 0)
 												{
 													$i = 1;
@@ -522,7 +419,7 @@
 													<td>$stdntID</td> <td>$fullName</td></tr>";
 													$i++; 	
 													}
-													echo "<input type='hidden' name='rows' value='$stdntNum' />";
+													echo "<input type='hidden' name='rows' value='$stdnt_num' />";
 												}
 											}
 							}

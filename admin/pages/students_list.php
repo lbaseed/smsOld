@@ -14,25 +14,6 @@
     <table class="table table-hover">
     <tr><th>#</th><th>Student ID</th><th>Full Name</th><th>Date of Birth</th><th>Class</th></tr>
     <?php
-        
-        /*
-        // $q= mysql_query("select * from students order by `studentID` ASC");
-        // $row = mysql_num_rows($q);
-        
-        // if ($row>0)
-        // {
-        //     for ($i=1; $i<=$row; $i++)
-        //     {
-        //         $rec = mysql_fetch_array($q);
-                
-        //         $sid = $rec["studentID"]; 
-        //         $fullName = $rec["lastName"] .", &nbsp ". $rec["firstName"]." &nbsp ". $rec["otherNames"];
-        //         $dob = $rec["dob"]; $class = $rec["class"] ." - ". $rec["subClass"];
-                
-        //         echo "<tr><td>$i</td> <td> <a href='index.php?id=34&sid=$sid'>$sid</a></td> <td>$fullName</td> <td>$dob</td> <td>$class</td></tr>";
-        //     }
-        // }
-        */
 
          $sql = 'select * from students order by `studentID` ASC';
          $stmt = $pdo->prepare($sql);
