@@ -6,7 +6,28 @@
 	 include('config.php');
 	
 
-	
+	//Function to check if user has logged in
+	function logged_in(){
+		return (isset($_SESSION['smuser']) && isset($_SESSION["clrs"]) && isset($_SESSION["pic"]) && isset($_SESSION["session"]) && isset($_SESSION["term"])) ? true : false;
+	}
+
+	function protectPage(){
+		if (logged_in() === false) {
+			logout();
+			exit();
+		}
+	}
+
+	function logout(){
+		unset($_SESSION["smuser"]);
+		unset($_SESSION["clrs"]);
+		unset($_SESSION["pic"]);
+		unset($_SESSION["session"]);
+		unset($_SESSION["term"]);
+		session_destroy();
+		header("Location: ../../login.php");
+	}
+
 	//auto logout function
 	function autologout(){		
 	if (isset( $_SESSION["ctime"]))
@@ -20,7 +41,7 @@
 			if ($time_dif > 1800)
 			{
 			unset($_SESSION["ctime"]);
-			header ("Location: .../login.php?id=lout");
+			header ("Location: ../login.php?id=lout");
 			}
 			else
 			{	
@@ -284,10 +305,8 @@
 	function getSubjectRegID($stdntID, $subjectID)
 	{
 		global $pdo;
-		//$term = $_SESSION["term"];
-		$term = 'SECOND';
-		//$session = $_SESSION["session"];
-		$session = '2018/2019';
+		$term = $_SESSION["term"];
+		$session = $_SESSION["session"];
 		$recID = "";
 
 		$stmt = $pdo->prepare("SELECT * FROM reg_subjects WHERE studentID = :stdntID AND subjectID = :subjectID AND session = :session");
@@ -337,10 +356,8 @@
 		$split = explode ("_",$class);
 		$mclass = $split[0]; 
 		$subclass = $split[1];
-		//$term = $_SESSION["term"];
-		$term = 'FIRST';
-		//$session = $_SESSION["session"];
-		$session = '2018/2019';
+		$term = $_SESSION["term"];
+		$session = $_SESSION["session"];
 		
 		$studentList = array(array());
 
@@ -1496,8 +1513,7 @@ text-align: left;  Center our text
 	//number of credits
 	function numCredits($studentID)
 	{
-		//$session = $_SESSION["session"];
-		$session = '2018/2019';
+		$session = $_SESSION["session"];
 
 		global $pdo;
 
@@ -1894,7 +1910,7 @@ function test($currClass){
 											//get record ID of student\'s subject score
 											$recID = getSubjectRegID($stdntID, $subjectID);
 											
-											$score = getSubjectScore($recID, $tbl, "SECOND");
+											$score = getSubjectScore($recID, $tbl, $_SESSION["term"]);
 											$trow = $trow . '<td style="padding-left:10px;">' .$score. '</td>';
 											$totalScore+=$score;
 											

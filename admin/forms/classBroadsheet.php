@@ -6,10 +6,8 @@ include("../mpdf60/mpdf.php");
 
 $mpdf=new mPDF('c','A4-L');
 
-		//$term = $_SESSION["term"];
-		$term = "SECOND";
-		//$session = str_replace("/","_",$_SESSION["session"]);
-		$session = "2018_2019";
+		$term = $_SESSION["term"];
+		$session = str_replace("/","_",$_SESSION["session"]);
 		
 		$currClass = $_GET["stdntClass"];
 		

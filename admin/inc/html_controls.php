@@ -1,6 +1,8 @@
 <?php ob_start(); 
-  include'phpFunctions.php';  date_default_timezone_set("Africa/Lagos");  
-	
+
+	include'phpFunctions.php';  
+	date_default_timezone_set("Africa/Lagos");  
+	protectPage();
 	
 	function pageTopLinks(){
 		?>
