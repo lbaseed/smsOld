@@ -15,7 +15,7 @@
                 
                 
                    Single Report Sheet
-                   	<form action="forms/singleReportSheet.php" target="_blank" method="get">
+                   	<form action="../forms/singleReportSheet.php" target="_blank" method="get">
                         		
                                  <div class="input-group">
                                 
@@ -28,7 +28,7 @@
                      </form>
                      <?php if ($_SESSION["term"]=="THIRD"){?>
                      Single Report Sheet Cumulative
-                     <form action="forms/singleReportSheetCumulative.php" target="_blank" method="get">
+                     <form action="../forms/singleReportSheetCumulative.php" target="_blank" method="get">
                         		
                                  <div class="input-group">
                                 

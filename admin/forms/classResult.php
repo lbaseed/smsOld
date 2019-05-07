@@ -14,6 +14,7 @@
 		$class = $_GET["class"];
 		$split = explode("_", $class);
 		$mclass = $split[0]; $sclass = $split[1];
+		
 		$q = mysql_query("select * from students where class='$mclass' and subClass='$sclass'");
 		
 		if (@mysql_num_rows($q)>0)

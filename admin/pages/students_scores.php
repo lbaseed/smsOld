@@ -65,7 +65,7 @@
 			
 		?>
 		<div class="input-group pull-right">
-                            <a href="<?php $cl=$_GET["stdntClass"]; echo "../forms/classBroadSheet.php?stdntClass=$cl";?>" target="_blank">
+                            <a href="<?php echo "../forms/classBroadSheet.php?stdntClass=".$_GET['stdntClass']."";?>" target="_blank">
                             <button class="btn btn-primary">Export PDF</button></a>
                         </div>
 			
@@ -173,7 +173,9 @@
 	
 									$subject= explode(",",$subjectList);
 										sort($subject);
-											for ($j=0; $j<count($subject); $j++ )
+										$score = 0;
+										$totalScore = 0;
+											for ($j=0; $j<sizeof($subject); $j++ )
 											{
 												
 												$subjectID = $subject[$j];
@@ -183,7 +185,7 @@
 												$recID = getSubjectRegID($stdntID, $subjectID);
 
 												//$term = $_SESSION["term"];
-												$term = 'first';
+												$term = 'SECOND';
 												$score = getSubjectScore($recID, $tbl, $term);
 												echo "<td>$score</td>";
 												

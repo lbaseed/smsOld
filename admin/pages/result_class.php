@@ -19,32 +19,21 @@
                         	<select class="form-control" name="class">
                             <option value="">Select Class</option>
                             <?php
+							
+									$stmt = $pdo->query("SELECT * FROM classes ORDER BY `classid` ASC");
 
-								$stmt = $pdo->query("SELECT * FROM classes ORDER BY `classID` ASC");
-								$rows = $stmt->rowCount();
-								if ($rows>0)
-								{
-									
-									while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
+									$rows = $stmt->rowCount();
+									if ($rows>0)
+									{
+										
+										while ($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 
-										$sid = $row->subjectID; 
-										$sTitle = $row->subjectTitle;
+											echo "<option value='$row->classid'>$row->classid</option>";
 
-										echo "<option value='$cid'>$cid</option>";
+										}
 
-
-                            	// $q = mysql_query("select * from classes order by `classID`");
-								
-								// if (@mysql_num_rows($q)>0)
-								// {
-								// 	for ($i=0; $i<mysql_num_rows($q); $i++)
-								// 	{
-								// 		$rec = mysql_fetch_array($q);
-								// 		$cid = $rec["classid"];
-								// 		echo "<option value='$cid'>$cid</option>";
-							 	}
-								}
-							?>
+									}
+                    			?>
                             </select>
                        	<input type="hidden" name="id" value="81" />
                        
@@ -63,14 +52,14 @@
 							{ 
 								$class = $_GET["class"];
 								echo "
-									 <a href='forms/classResult.php?class=$class' target='_blank'>
+									 <a href='../forms/classResult.php?class=$class' target='_blank'>
                     					<button type='button' class='btn btn-primary'>All Report Sheets</button>
                    					 </a> &nbsp &nbsp &nbsp &nbsp
 								";
 								if ($_SESSION["term"]=="THIRD")
 								{
 									echo "
-										<a href='forms/classResultCumulative.php?class=$class' target='_blank'>
+										<a href='../forms/classResultCumulative.php?class=$class' target='_blank'>
                     					<button type='button' class='btn btn-primary'>Cumulative Report Sheet</button>
                    						</a>
 									";
