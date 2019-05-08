@@ -35,16 +35,12 @@
             <span class="fa fa-angle-left pull-right"></span>
           </a>
           <ul class="treeview-menu">
-          <?php
-		   echo "
-            <li><a href='index.php?id=21'><i class='fa fa-circle-o'></i> Process Payments</i></a></li>
-            <li><a href='index.php?id=22'><i class='fa fa-circle-o'></i> Students Payments</a></li>
-            <li><a href='index.php?id=23'><i class='fa fa-circle-o'></i> Payment Statistics</a></li>
-            <li><a href='index.php?id=24'><i class='fa fa-circle-o'></i> Set Up Fees to be paid</a></li>
-            <li><a href='index.php?id=25'><i class='fa fa-circle-o'></i> Payments History</a></li>
-            <li><a href='index.php?id=26'><i class='fa fa-search'></i> Search</a></li>
-			";
-            ?>
+            <li class="<?php if ($page == 'payments_process.php') {echo 'active';} ?>"><a href='payments_process.php'><i class='fa fa-circle-o'></i> Process Payments</i></a></li>
+            <li class="<?php if ($page == 'payments_student.php') {echo 'active';} ?>"><a href='payments_student.php'><i class='fa fa-circle-o'></i> Students Payments</a></li>
+            <li class="<?php if ($page == 'payments_statistics.php') {echo 'active';} ?>"><a href='payments_statistics.php'><i class='fa fa-circle-o'></i> Payment Statistics</a></li>
+            <li class="<?php if ($page == 'payments_setup_feetobe_paid.php') {echo 'active';} ?>"><a href='payments_setup_feetobe_paid.php'><i class='fa fa-circle-o'></i> Set Up Fees to be paid</a></li>
+            <li class="<?php if ($page == 'payments_history.php') {echo 'active';} ?>"><a href='payments_history.php'><i class='fa fa-circle-o'></i> Payments History</a></li>
+            <li class="<?php if ($page == 'payments_search.php') {echo 'active';} ?>"><a href='payments_search.php'><i class='fa fa-search'></i> Search</a></li>
           </ul>
         </li>
 
