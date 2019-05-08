@@ -23,6 +23,7 @@
                             if ($a==15) {assignSubjects();}
                             if ($a==16) {staffSearch();}
 							
+							//@todo-kolerian
 							//second dropdown  [manage school fees]
                             if ($a==21) {processPayments();}
 							if ($a==22) {studentsPayments();}

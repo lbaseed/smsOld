@@ -201,7 +201,7 @@
 		global $pdo;
 
 		$stmt = $pdo->prepare("SELECT * FROM students WHERE studentID = :studentID");
-		$stmt->execute(['studentID' => $studentID ]);
+		$stmt->execute([':studentID' => $studentID ]);
 
 		$rows = $stmt->rowCount();
 
