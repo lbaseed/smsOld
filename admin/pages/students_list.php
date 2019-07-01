@@ -1,4 +1,4 @@
-<?php include("../inc/html_controls.php");?>
+<?php include("../inc/html_controls.php"); include("../inc/config.php")?>
 
 <?php initializePage(); ?>
 
